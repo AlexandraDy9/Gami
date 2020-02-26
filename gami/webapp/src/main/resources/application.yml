@@ -1,0 +1,36 @@
+spring:
+  session:
+    store-type: jdbc
+    jdbc:
+      initialize-schema: always
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:gami}?useSSL=${MYSQL_SSL:false}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
+    testWhileIdle: true
+    validationQuery: SELECT 1
+    driver-class-name: com.mysql.jdbc.Driver
+  social:
+    facebook:
+      appId: ${FACEBOOK_CLIENT_ID:721467465034652}
+      secret: ${FACEBOOK_SECRET:fb721467465034652}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+        implicit_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        physical_naming_strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        id:
+          new_generator_mappings: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: hobi.do.not.reply@gmail.com
+    password: AndBiaDanDiaVla`005`
+    properties.mail.smtp.auth: true
+    properties.mail.smtp.starttls.enable: true
+    properties.mail.smtp.ssl.: trust
