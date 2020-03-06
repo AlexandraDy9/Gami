@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
+
+        <com.mikhaellopez.circularimageview.CircularImageView
+                android:id="@+id/reviewer_image"
+                android:layout_width="40dp"
+                android:layout_height="50dp"
+                android:scaleX="0.9"
+                android:scaleY="0.9"
+                android:src="@drawable/ic_user_profile"
+                app:civ_border_color="#000"
+                app:civ_border_width="0dp"
+                app:civ_shadow="true"
+                app:civ_shadow_color="#000"
+                app:civ_shadow_radius="0.5" />
+
+        <TextView
+                android:id="@+id/reviewer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:textSize="17sp" />
+
+    </LinearLayout>
+
+    <RatingBar
+            android:id="@+id/reviewer_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:isIndicator="true"
+            style="@style/Base.Widget.AppCompat.RatingBar.Small"/>
+
+    <TextView
+            android:id="@+id/reviewer_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"/>
+
+</LinearLayout>

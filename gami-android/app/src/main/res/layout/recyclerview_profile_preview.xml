@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginLeft="10dp">
+
+    <TextView
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_email"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:textSize="15sp" />
+
+    <TextView
+            android:id="@+id/first_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_user"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:textSize="15sp" />
+
+    <TextView
+            android:id="@+id/last_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_user"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:textSize="15sp" />
+
+    <TextView
+            android:id="@+id/birthday"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_date"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:textSize="15sp" />
+
+    <TextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="30dp"
+            android:textSize="15sp" />
+
+    <TextView
+            android:id="@+id/hosted_events"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="@string/hosted_events"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
+</LinearLayout>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <group android:id="@+id/app_navigation_links">
+        <item
+            android:id="@+id/favorites"
+            android:icon="@drawable/ic_five_pointed_star"
+            android:title="Favorites" />
+
+        <item
+            android:id="@+id/events"
+            android:icon="@drawable/ic_calendar"
+            android:title="Events" />
+    </group>
+
+</menu>
