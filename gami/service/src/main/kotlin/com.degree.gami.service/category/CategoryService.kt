@@ -32,19 +32,14 @@ class CategoryService(private val categoryRepository: CategoryRepository,
     fun update(name: String, newCategory: CategoryDao) {
         val currentCategory: CategoryEntity = categoryRepository.findByName(name)
         currentCategory.image = newCategory.image
-        currentCategory.isIndoor = newCategory.isIndoor
         currentCategory.name = newCategory.name
         categoryRepository.save(currentCategory)
     }
-
-    fun getAllByIsIndoor(isIndoor: Boolean): List<CategoryDao> {
-        val listCategories: List<CategoryEntity> = if (isIndoor) {
-            categoryRepository.findAllByIndoorIsTrue()
-        } else {
-            categoryRepository.findAllByIndoorIsFalse()
-        }
-        return categoryConverter.convertListToDaoList(listCategories)
-    }
+//
+//    fun getAllByIsIndoor(isIndoor: Boolean): List<CategoryDao> {
+//        val listCategories: List<CategoryEntity> = categoryRepository.findAll()
+//        return categoryConverter.convertListToDaoList(listCategories)
+//    }
 
     fun getAll(): List<CategoryDao> {
         val listCategories: List<CategoryEntity> = categoryRepository.findAll()
@@ -56,7 +51,7 @@ class CategoryService(private val categoryRepository: CategoryRepository,
 
     @Transactional
     fun uploadImages(file: MultipartFile) {
-        if (file.isEmpty()) {
+        if (file.isEmpty) {
             throw RuntimeException("File is empty.")
         } else {
             try {
@@ -86,9 +81,9 @@ class CategoryService(private val categoryRepository: CategoryRepository,
                 '2' to Pair("music", true), '3' to Pair("painting", true), '4' to Pair("pottery", true),
                 '5' to Pair("swimming", true), '6' to Pair("winter sports", false), '7' to Pair("yoga", true))
         val key = fileName[fileName.length - 1]
-        val categoryToAdd = CategoryDao(images[key]?.first, images[key]!!.second, destination.toString())
-        val category: CategoryEntity = categoryConverter.convertFromDao(categoryToAdd)
-        categoryRepository.save(category)
+//        val categoryToAdd = CategoryDao(images[key]?.first, images[key]!!.second, destination.toString())
+//        val category: CategoryEntity = categoryConverter.convertFromDao(categoryToAdd)
+//        categoryRepository.save(category)
     }
 
 }

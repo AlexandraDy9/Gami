@@ -63,15 +63,12 @@ class EventService(private val eventRepository: EventRepository,
         return eventsOfCategory
     }
 
-    fun getAll(isIndoor: Boolean) : List<EventDao>{
+    fun getAll() : List<EventDao>{
         val events = eventRepository.findAll()
         val listEvents = mutableListOf<EventDao>()
 
-        events.forEach {
-            when (it.category!!.isIndoor) {
-                isIndoor -> listEvents.add(eventConverter.convertToDao(it))
-            }
-        }
+        events.forEach {listEvents.add(eventConverter.convertToDao(it)) }
+
         return listEvents
     }
 

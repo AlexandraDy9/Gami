@@ -35,4 +35,6 @@ class EventConverter(val validation: EventValidation) {
 
     fun convertToAgeRangeDao(ageRangeEntity: AgeRangeEntity): AgeRangeDao =
             AgeRangeDao(ageRangeEntity.ageMin!!, ageRangeEntity.ageMax!!)
+
+    //todo: create a convert to dao list
 }

@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service
 class CategoryConverter {
 
     fun convertFromDao(categoryDao: CategoryDao) : CategoryEntity =
-            CategoryEntity(categoryDao.name, categoryDao.isIndoor,categoryDao.image)
+            CategoryEntity(categoryDao.name,categoryDao.image)
 
     fun convertToDao(categoryEntity: CategoryEntity): CategoryDao =
-            CategoryDao(categoryEntity.name, categoryEntity.isIndoor, categoryEntity.image)
+            CategoryDao(categoryEntity.name, categoryEntity.image)
 
     fun convertListToDaoList(categoryEntities: List<CategoryEntity>): List<CategoryDao>{
         val categoryDao: MutableList<CategoryDao> = mutableListOf()

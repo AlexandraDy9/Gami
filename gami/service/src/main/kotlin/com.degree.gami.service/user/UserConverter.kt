@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 class UserConverter {
 
     fun convertCategoryToDao(category: CategoryEntity?) : CategoryDao =
-            CategoryDao(category!!.name, category.isIndoor, category.image)
+            CategoryDao(category!!.name, category.image)
 
     fun convertEventToDao(event: EventEntity?) : EventDao {
         return EventDao(event?.name.toString(),
