@@ -1,7 +1,6 @@
 package com.degree.gami.persistence.user
 
 import com.degree.gami.persistence.base.TimestampedEntity
-import com.degree.gami.persistence.userentities.usercategory.UserCategoryEntity
 import com.degree.gami.persistence.userentities.userevents.UserEventEntity
 import com.degree.gami.persistence.userentities.userphoto.UserPhotoEntity
 import com.fasterxml.jackson.annotation.JsonIgnore
@@ -44,9 +43,6 @@ class UserEntity(
 
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         var photos: MutableList<UserPhotoEntity>? = null,
-
-        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-        var userCategories: MutableList<UserCategoryEntity>? = null,
 
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
         var userEvents: MutableList<UserEventEntity>? = null,

@@ -1,5 +1,6 @@
 package com.university.gami_android.ui.add_event
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
@@ -43,7 +44,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
     private lateinit var startTime: EditText
     private lateinit var endTime: EditText
 
-    private lateinit var finishButton: TextView
+    private lateinit var finishButton: Button
 
     private var lat: Double = 0.0
     private var long: Double = 0.0
@@ -63,6 +64,35 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
         presenter = AddEventPresenter()
         presenter.bindView(this)
 
+        initAttributes()
+        setListeners()
+
+        presenter.getCategories(this)
+        presenter.getAgeRanges(this)
+        initializeObservers()
+
+        if (!Places.isInitialized()) {
+            Places.initialize(this, R.string.places.toString())
+        }
+
+        //val searchFragment = supportFragmentManager.findFragmentById(R.id.add_event_search) as AutocompleteSupportFragment
+        // val list = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
+//
+//        searchFragment.setPlaceFields(list)
+//        searchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+//            override fun onPlaceSelected(place: Place) {
+//                lat = place.latLng?.latitude!!
+//                long = place.latLng?.longitude!!
+//            }
+//
+//            override fun onError(status: Status) {
+//                Toast.makeText(appContext(), "An error occurred: " + status, Toast.LENGTH_LONG)
+//                    .show()
+//            }
+//        })
+    }
+
+    private fun initAttributes() {
         backButton = findViewById(R.id.back_btn)
 
         name = findViewById(R.id.event_name_text)
@@ -78,14 +108,12 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
         endTime = findViewById(R.id.end_time)
 
         finishButton = findViewById(R.id.done_btn)
+    }
 
+    private fun setListeners() {
         backButton.setOnClickListener { finish() }
         date.setOnClickListener(this)
         finishButton.setOnClickListener(this)
-
-        presenter.getCategories(this)
-        presenter.getAgeRanges(this)
-        initializeObservers()
 
         name.addTextChangedListener(object : EditTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
@@ -111,34 +139,28 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
             }
         })
 
-        startTime.setOnClickListener {
-            setTime(startTime, true)
-        }
+        startTime.setOnClickListener { setTime(startTime, true) }
+        endTime.setOnClickListener { setTime(endTime, false) }
+    }
 
-        endTime.setOnClickListener {
-            setTime(endTime, false)
-        }
+    private fun setTime(editText: EditText, isStart: Boolean) {
+        val currentTime = Calendar.getInstance()
+        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
+        val minute = currentTime.get(Calendar.MINUTE)
+        val timePicker: TimePickerDialog
 
-        if (!Places.isInitialized()) {
-            Places.initialize(this, R.string.places.toString())
-        }
-
-        var searchFragment =
-            supportFragmentManager.findFragmentById(R.id.add_event_search) as AutocompleteSupportFragment
-        var list = listOf<Place.Field>(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
-
-        searchFragment.setPlaceFields(list)
-        searchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-            override fun onPlaceSelected(place: Place) {
-                lat = place.latLng?.latitude!!
-                long = place.latLng?.longitude!!
-            }
-
-            override fun onError(status: Status) {
-                Toast.makeText(appContext(), "An error occurred: " + status, Toast.LENGTH_LONG)
-                    .show()
-            }
-        })
+        timePicker = TimePickerDialog(
+            this,
+            TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
+                editText.setText(String.format("%02d:%02d", selectedHour, selectedMinute))
+                if (isStart) {
+                    start = calendar + "T" + editText.text.toString() + ":00"
+                } else {
+                    end = calendar + "T" + editText.text.toString() + ":00"
+                }
+            }, hour, minute, true
+        )
+        timePicker.show()
     }
 
     private fun initializeObservers() {
@@ -156,13 +178,12 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
     }
 
     private fun initializeCategories() {
-        val categoryArrayAdapter =
-            ArrayAdapter<String>(
-                this,
-                R.layout.support_simple_spinner_dropdown_item,
-                categoryList.toList()
-            )
-        category.setAdapter(categoryArrayAdapter)
+        val categoryArrayAdapter = ArrayAdapter<String>(
+            this,
+            R.layout.support_simple_spinner_dropdown_item,
+            categoryList.toList()
+        )
+        category.adapter = categoryArrayAdapter
 
         category.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
@@ -183,16 +204,14 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
     private fun initializeAgeRanges() {
         val ageRangeArrayAdapter =
             ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, ages)
-        ageRange.setAdapter(ageRangeArrayAdapter)
+        ageRange.adapter = ageRangeArrayAdapter
 
         var splitingAgeRange: List<String>
 
         ageRange.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
             override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View,
-                position: Int,
-                id: Long
+                parent: AdapterView<*>, view: View, position: Int, id: Long
             ) {
                 splitingAgeRange = parent.getItemAtPosition(position).toString().split("-")
             }
@@ -203,25 +222,7 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
         }
     }
 
-    private fun setTime(editText: EditText, isStart: Boolean) {
-        val currentTime = Calendar.getInstance()
-        val hour = currentTime.get(Calendar.HOUR_OF_DAY)
-        val minute = currentTime.get(Calendar.MINUTE)
-        val timePicker: TimePickerDialog
-        timePicker = TimePickerDialog(
-            this,
-            TimePickerDialog.OnTimeSetListener { _, selectedHour, selectedMinute ->
-                editText.setText(String.format("%02d:%02d", selectedHour, selectedMinute))
-                if (isStart) {
-                    start = calendar + "T" + editText.text.toString() + ":00"
-                } else {
-                    end = calendar + "T" + editText.text.toString() + ":00"
-                }
-            }, hour, minute, true
-        )
-        timePicker.show()
-    }
-
+    @SuppressLint("SimpleDateFormat")
     override fun onClick(v: View?) {
         when (v?.id) {
 
@@ -273,5 +274,10 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
     override fun navigateToHomeActivity(context: Context) {
         finish()
         startActivity(Intent(context, MainActivity::class.java))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.unbindView()
     }
 }

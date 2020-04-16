@@ -9,6 +9,7 @@ import javax.validation.constraints.NotEmpty
 @Inheritance(strategy = InheritanceType.JOINED)
 class UserPhotoEntity (
     @field:NotEmpty
+    @Column(length = 1000)
     var image: String? = null,
 
     @ManyToOne

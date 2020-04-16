@@ -14,9 +14,7 @@ import com.university.gami_android.ui.base.BasePresenter
 class WriteReviewPresenter  : BasePresenter<WriteReviewContract.View>(),
     WriteReviewContract.Presenter {
 
-    private var eventRepository: EventRepository = RetrofitClientInstance.retrofitInstance?.create(
-        EventRepository::class.java)!!
-
+    private var eventRepository: EventRepository = RetrofitClientInstance.retrofitInstance?.create(EventRepository::class.java)!!
 
     override fun doCreateReview(nameEvent: String, review: SendReview, context: Context) {
         val call = eventRepository.saveReview(PreferenceHandler.getAuthorization(), nameEvent, review)

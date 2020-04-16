@@ -1,9 +1,7 @@
 package com.degree.gami.service.user
 
-import com.degree.gami.model.CategoryDao
 import com.degree.gami.model.EventDao
 import com.degree.gami.model.UserDao
-import com.degree.gami.persistence.category.CategoryEntity
 import com.degree.gami.persistence.event.EventEntity
 import com.degree.gami.persistence.user.UserEntity
 import org.springframework.stereotype.Service
@@ -11,10 +9,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserConverter {
-
-    fun convertCategoryToDao(category: CategoryEntity?) : CategoryDao =
-            CategoryDao(category!!.name, category.image)
-
     fun convertEventToDao(event: EventEntity?) : EventDao {
         return EventDao(event?.name.toString(),
                 event?.description.toString(),

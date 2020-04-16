@@ -9,6 +9,7 @@ import android.os.StrictMode
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,7 @@ import com.university.gami_android.R
 import com.university.gami_android.model.Event
 import com.university.gami_android.model.Photo
 import com.university.gami_android.ui.event_details.EventDetailsActivity
+import com.university.gami_android.util.getNavigationBarSize
 import kotlinx.android.synthetic.main.activity_events.*
 import java.net.URL
 
@@ -46,7 +48,9 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile_preview)
-//        setSupportActionBar(toolbar_events)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         presenter = ProfilePreviewPresenter()
         presenter.bindView(this)
@@ -56,14 +60,19 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
 
         carouselView = findViewById(R.id.carousel_view)
         carouselView.pageCount = imageList.size
-        carouselView.setImageListener(imageListener)
 
         backButton = findViewById(R.id.back)
-        backButton.setOnClickListener { finish() }
         profileImage = findViewById(R.id.profile_image)
 
-        profilePreviewAdapter = ProfilePreviewAdapter(this)
+        carouselView.setImageListener(imageListener)
+        backButton.setOnClickListener { finish() }
 
+        initObservers(username!!)
+
+        setupRecycler()
+    }
+
+    private fun initObservers(username: String) {
         presenter.getHostedEvents(appContext(), username)
         presenter.hostedEvents.observe(this, Observer { list ->
             list?.let {
@@ -85,10 +94,14 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
                 updatePhotos()
             }
         })
+    }
+
+    private fun setupRecycler() {
+        profilePreviewAdapter = ProfilePreviewAdapter(this)
 
         val profilePreviewRecyclerView: RecyclerView =
             findViewById(R.id.recyclerView_profile_preview)
-        profilePreviewRecyclerView.setPadding(0, 0, 0, getNavigationBarSize())
+        profilePreviewRecyclerView.setPadding(0, 0, 0, getNavigationBarSize(resources))
         profilePreviewRecyclerView.layoutManager = LinearLayoutManager(this)
         profilePreviewRecyclerView.adapter = profilePreviewAdapter
 
@@ -97,10 +110,10 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
     private fun updatePhotos() {
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        if (userPhotos!!.isNotEmpty()) {
+        if (userPhotos.isNotEmpty()) {
             profileImage.visibility = View.INVISIBLE
             carouselView.visibility = View.VISIBLE
-            userPhotos?.forEach {
+            userPhotos.forEach {
                 val url = URL(it.image)
                 val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
                 imageList.add(bitmap)
@@ -114,21 +127,6 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
                 carouselView.pageCount = carouselView.pageCount + 1
             }
         }
-    }
-
-    private fun getNavigationBarSize(): Int {
-        if (!hasNavBar())
-            return 0
-        val id: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (id > 0) {
-            return resources.getDimensionPixelSize(id)
-        }
-        return 0
-    }
-
-    private fun hasNavBar(): Boolean {
-        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        return id > 0 && resources.getBoolean(id)
     }
 
     override fun onItemClick(event: Event) {

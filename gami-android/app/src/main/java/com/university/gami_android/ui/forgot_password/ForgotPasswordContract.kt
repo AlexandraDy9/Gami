@@ -11,7 +11,6 @@ class ForgotPasswordContract {
 
     interface Presenter {
         fun emailValidation(email: String): Boolean
-
         fun doForgotPassword(sendMail: SendMail, view: android.view.View, context: Context)
     }
 }

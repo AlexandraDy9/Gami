@@ -15,6 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.university.gami_android.R
 import com.university.gami_android.model.SendMail
 import com.university.gami_android.util.EditTextWatcher
+import com.university.gami_android.util.getNavigationBarSize
 
 
 class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
@@ -41,17 +42,23 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
         presenter = ForgotPasswordPresenter()
         presenter.bindView(this)
 
+        initAttribites()
+        setListeners()
+    }
+
+    private fun initAttribites() {
         email = findViewById(R.id.email_text)
         emailLayout = findViewById(R.id.email)
         backButton = findViewById(R.id.back)
         sendButton = findViewById(R.id.send_btn)
         progressBar = findViewById(R.id.progress_bar)
         sendButton.isEnabled = false
+    }
 
+    private fun setListeners() {
         email.addTextChangedListener(textWatcher)
         backButton.setOnClickListener { finish() }
         sendButton.setOnClickListener(this)
-
     }
 
     override fun viewSnackbar() {
@@ -68,34 +75,9 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
                 startActivity(intent)
                 startActivity(Intent.createChooser(intent, "Choose email"))
             }
-            view.setPadding(0, 0, 0, getNavigationBarSize())
+            view.setPadding(0, 0, 0, getNavigationBarSize(resources))
             show()
         }
-    }
-
-    private fun hasErrorForEmail(): Boolean {
-        return if (!presenter.emailValidation(email.text.toString())) {
-            emailLayout.error = resources.getString(R.string.email_error)
-            false
-        } else {
-            emailLayout.error = null
-            true
-        }
-    }
-
-    private fun getNavigationBarSize(): Int {
-        if (!hasNavBar())
-            return 0
-        val id: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (id > 0) {
-            return resources.getDimensionPixelSize(id)
-        }
-        return 0
-    }
-
-    private fun hasNavBar(): Boolean {
-        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        return id > 0 && resources.getBoolean(id)
     }
 
     override fun onClick(v: View?) {
@@ -111,6 +93,16 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
                     progressBar.visibility = View.VISIBLE
                 }
             }
+        }
+    }
+
+    private fun hasErrorForEmail(): Boolean {
+        return if (!presenter.emailValidation(email.text.toString())) {
+            emailLayout.error = resources.getString(R.string.email_error)
+            false
+        } else {
+            emailLayout.error = null
+            true
         }
     }
 

@@ -14,28 +14,32 @@ import com.university.gami_android.util.formatDate
 import com.university.gami_android.util.load
 
 
-class EventListAdapter(val context: Context, val itemClickListener: ItemClickListener, var bookmarks : List<Event>) :
+class EventListAdapter(val context: Context, val itemClickListener: ItemClickListener) :
     RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
 
     private var list: List<Event> = listOf()
     private var inflater: LayoutInflater? = LayoutInflater.from(context)
-    private var viewHolder: ViewHolder? = null
+    private var bookmarks : List<Event> = listOf()
 
     fun setMediaList(list: List<Event>) {
         this.list = list
         notifyDataSetChanged()
     }
 
+    fun filter(eventName: String?) {
+        val newList = this.list.filter { event -> event.name == eventName }
+        this.list = newList
+        notifyDataSetChanged()
+    }
+
     fun setBookmarkList(bookmarkList: List<Event>){
-        bookmarks = bookmarkList
-        viewHolder?.setBookmarkList(bookmarks)
+        this.bookmarks = bookmarkList
         notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = inflater!!.inflate(R.layout.item_event, parent, false)
-        viewHolder = ViewHolder(view, this.bookmarks)
-        return viewHolder!!
+        return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -46,17 +50,8 @@ class EventListAdapter(val context: Context, val itemClickListener: ItemClickLis
         return list.size
     }
 
-    inner class ViewHolder(view: View, var bookmarks: List<Event>) :
+    inner class ViewHolder(view: View) :
         RecyclerView.ViewHolder(view) {
-
-
-        private var bookmarkDtoList = mutableListOf<BookmarkEventDto>()
-
-        fun setBookmarkList(bookmarkList : List<Event>){
-            this.bookmarks = bookmarkList
-            bookmarkDtoList = mutableListOf()
-            bookmarks.forEach{bookmarkDtoList.add(BookmarkEventDto(it.name, true))}
-        }
 
         fun bindView(item: Event) {
             val eventName: TextView = itemView.findViewById(R.id.event_name)
@@ -70,7 +65,7 @@ class EventListAdapter(val context: Context, val itemClickListener: ItemClickLis
             eventFinish.text = item.endTime.formatDate(itemView.resources.getString(R.string
                     .source_date_format), itemView.resources.getString(R.string.result_date_format))
 
-            val bookmarkIcon = itemView.findViewById<ImageView>(R.id.bookmark_button)
+            val bookmarkIcon: ImageView = itemView.findViewById(R.id.bookmark_button)
 
             val isBookmarked = bookmarks.contains(item)
             if(isBookmarked){
@@ -82,14 +77,15 @@ class EventListAdapter(val context: Context, val itemClickListener: ItemClickLis
             itemView.setOnClickListener {
                 itemClickListener.onItemClick(item)
             }
-            itemView.findViewById<ImageView>(R.id.bookmark_button).setOnClickListener {
-                itemClickListener.onBookmarkClick(bookmarkIcon, context, BookmarkEventDto(item.name, isBookmarked))
+
+            bookmarkIcon.setOnClickListener {
+                itemClickListener.onBookmarkClick(context, BookmarkEventDto(item.name, isBookmarked))
             }
         }
     }
 
     interface ItemClickListener {
         fun onItemClick(event: Event)
-        fun onBookmarkClick(bookmarkIcon : ImageView, context: Context, event: BookmarkEventDto)
+        fun onBookmarkClick(context: Context, event: BookmarkEventDto)
     }
 }

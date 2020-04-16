@@ -1,122 +1,203 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:openDrawer="start">
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:openDrawer="start">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="?attr/actionBarSize"
+            android:background="@android:color/background_light"
+            android:elevation="4dp"
+            app:menu="@menu/search_bar"/>
 
-        <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar_main"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@android:color/background_light"
-                android:elevation="4dp" />
-
-        <androidx.constraintlayout.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <FrameLayout
-                    android:id="@+id/first_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toTopOf="@id/second_category"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                android:id="@+id/first_category"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_fragment"
+                app:layout_constraintBottom_toTopOf="@id/second_category"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                        android:id="@+id/outdoor_activity"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:alpha="0.85"
-                        android:background="@android:color/white"
-                        android:paddingBottom="1dp"
-                        android:scaleType="centerCrop" />
+                    android:id="@+id/catan_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.80"
+                    android:background="@drawable/rounded_fragment"
+                    android:paddingBottom="1dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/catan" />
 
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/lato"
-                        android:gravity="center"
-                        android:text="@string/outdoor_category_title"
-                        android:textColor="@android:color/white"
-                        android:textFontWeight="300"
-                        android:textSize="60sp">
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/lato"
+                    android:gravity="center"
+                    android:text="@string/catan_category_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="60sp">
 
                 </TextView>
             </FrameLayout>
 
 
             <FrameLayout
-                    android:id="@+id/second_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/first_category">
+                android:id="@+id/second_category"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_fragment"
+                app:layout_constraintBottom_toTopOf="@id/third_category"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/first_category">
 
                 <ImageView
-                        android:id="@+id/indoor_activity"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:alpha="0.85"
-                        android:background="@android:color/white"
-                        android:paddingTop="1dp"
-                        android:scaleType="centerCrop" />
+                    android:id="@+id/carcassone_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.80"
+                    android:background="@drawable/rounded_fragment"
+                    android:paddingTop="1dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/carcassonne" />
 
                 <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:fontFamily="@font/lato"
-                        android:gravity="center"
-                        android:text="@string/indoor_category_title"
-                        android:textColor="@android:color/white"
-                        android:textFontWeight="300"
-                        android:textSize="60sp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/lato"
+                    android:gravity="center"
+                    android:text="@string/carcassone_category_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="60sp" />
             </FrameLayout>
 
+            <FrameLayout
+                android:id="@+id/third_category"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/rounded_fragment"
+                app:layout_constraintBottom_toTopOf="@id/fourth_category"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/second_category">
 
-        </androidx.constraintlayout.ConstraintLayout>
+                <ImageView
+                    android:id="@+id/ligretto_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.80"
+                    android:background="@drawable/rounded_fragment"
+                    android:paddingBottom="1dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/outdoor_activity" />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/lato"
+                    android:gravity="center"
+                    android:text="@string/ligretto_category_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="60sp">
+
+                </TextView>
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/fourth_category"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@drawable/rounded_fragment"
+                app:layout_constraintBottom_toTopOf="@id/view_all_events"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/third_category">
+
+                <ImageView
+                    android:id="@+id/mysterium_activity"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:alpha="0.80"
+                    android:background="@drawable/rounded_fragment"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/mysterium" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fontFamily="@font/lato"
+                    android:gravity="center"
+                    android:text="@string/mysterium_category_title"
+                    android:textColor="@android:color/white"
+                    android:textSize="60sp">
+
+                </TextView>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/view_all_events"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/lato_light"
+                android:text="@string/view_all_events"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fourth_category"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
-
-    <android.support.design.widget.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/header"
-            app:menu="@menu/drawer_navigation_links">
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/drawer_navigation_links">
 
         <LinearLayout
-                android:id="@+id/bottom_menu_group"
+            android:id="@+id/bottom_menu_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="horizontal">
+
+            <com.google.android.material.navigation.NavigationView
+                android:id="@+id/logout_nav_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:orientation="horizontal">
+                android:layout_gravity="start"
+                app:menu="@menu/drawer_account_links">
 
-            <android.support.design.widget.NavigationView
-                    android:id="@+id/logout_nav_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    app:menu="@menu/drawer_account_links">
-
-            </android.support.design.widget.NavigationView>
+            </com.google.android.material.navigation.NavigationView>
 
         </LinearLayout>
-    </android.support.design.widget.NavigationView>
+    </com.google.android.material.navigation.NavigationView>
 
-</androidx.core.widget.DrawerLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

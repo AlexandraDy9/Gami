@@ -8,6 +8,7 @@ import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
 import com.university.gami_android.model.Event
 import com.university.gami_android.model.Host
+import com.university.gami_android.model.ReviewDao
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.EventRepository
 import com.university.gami_android.repository.UserRepository

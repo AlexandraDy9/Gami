@@ -15,7 +15,8 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:paddingTop="30dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_medium" />
 
     <TextView
             android:id="@+id/first_name"
@@ -25,7 +26,8 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:paddingTop="30dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_medium" />
 
     <TextView
             android:id="@+id/last_name"
@@ -35,7 +37,8 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:paddingTop="30dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_medium" />
 
     <TextView
             android:id="@+id/birthday"
@@ -45,7 +48,8 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:paddingTop="30dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_medium"/>
 
     <TextView
             android:id="@+id/description"
@@ -53,7 +57,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:paddingTop="30dp"
-            android:textSize="15sp" />
+            android:textSize="15sp"
+            android:fontFamily="@font/lato_medium" />
 
     <TextView
             android:id="@+id/hosted_events"
@@ -62,5 +67,6 @@
             android:layout_marginTop="40dp"
             android:text="@string/hosted_events"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:fontFamily="@font/lato_medium" />
 </LinearLayout>

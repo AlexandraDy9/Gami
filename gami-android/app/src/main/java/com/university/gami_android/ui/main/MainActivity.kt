@@ -2,7 +2,9 @@ package com.university.gami_android.ui.main
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.view.*
@@ -10,9 +12,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -25,6 +29,7 @@ import com.university.gami_android.ui.events.EventsActivity
 import com.university.gami_android.ui.joined_events.JoinedEventsActivity
 import com.university.gami_android.ui.login.LoginActivity
 import com.university.gami_android.ui.profile.ProfileActivity
+import com.university.gami_android.util.getNavigationBarSize
 import com.university.gami_android.util.load
 
 
@@ -35,13 +40,17 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     private var drawer: DrawerLayout? = null
     private var bottomMenuGroup: LinearLayout? = null
     private var userPhotos: List<Photo> = arrayListOf()
+    private var storagePermission: Boolean = false
 
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         presenter = MainPresenter()
         presenter?.bindView(this)
+
+        getLocationPermission()
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -56,11 +65,7 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         toggle.syncState()
 
         bottomMenuGroup = findViewById(R.id.bottom_menu_group)
-        var params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.WRAP_CONTENT
-        )
-        bottomMenuGroup?.setPadding(0, 0, 0, getNavigationBarSize())
+        bottomMenuGroup?.setPadding(0, 0, 0, getNavigationBarSize(resources))
 
         val logoutNavView = findViewById<NavigationView>(R.id.logout_nav_view)
         logoutNavView.setNavigationItemSelectedListener(this)
@@ -120,34 +125,26 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     }
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig)
+        super.onConfigurationChanged(newConfig!!)
         finish()
         startActivity(intent)
     }
 
-    private fun getNavigationBarSize(): Int {
-        if (!hasNavBar())
-            return 0
-        val id: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (id > 0) {
-            return resources.getDimensionPixelSize(id)
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun getLocationPermission() {
+        if (ContextCompat
+                .checkSelfPermission(
+                    appContext(),
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            storagePermission = true
+        } else {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                0
+            )
         }
-        return 0
-    }
-
-    private fun isNavigationBarVisible(): Boolean {
-        val hasMenuKey: Boolean = ViewConfiguration.get(appContext()).hasPermanentMenuKey();
-        val hasBackKey: Boolean = KeyCharacterMap.deviceHasKey(KeyEvent.KEYCODE_BACK);
-
-        if (hasMenuKey || hasBackKey) {
-            return false
-        }
-        return true
-    }
-
-    private fun hasNavBar(): Boolean {
-        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        return id > 0 && resources.getBoolean(id)
     }
 
     override fun appContext(): Context = applicationContext
@@ -162,20 +159,30 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     }
 
     private fun loadImages() {
-        val outdoorActivity: ImageView = findViewById(R.id.outdoor_activity)
-        outdoorActivity.load(appContext(), R.drawable.outdoor_activity)
-
-        outdoorActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", false))
+        val catanActivity: ImageView = findViewById(R.id.catan_activity)
+        catanActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Catan"))
         }
 
-        val indoorActivity: ImageView = findViewById(R.id.indoor_activity)
-        indoorActivity.load(appContext(), R.drawable.indoor_activity)
-
-        indoorActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", true))
+        val carcassoneActivity: ImageView = findViewById(R.id.carcassone_activity)
+        carcassoneActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Carcassone"))
         }
 
+        val ligrettoActivity: ImageView = findViewById(R.id.ligretto_activity)
+        ligrettoActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Ligretto"))
+        }
+
+        val mysteriumActivity: ImageView = findViewById(R.id.mysterium_activity)
+        mysteriumActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Mysterium"))
+        }
+
+        val allEvents: TextView = findViewById(R.id.view_all_events)
+        allEvents.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "ALL"))
+        }
     }
 
     override fun onDestroy() {

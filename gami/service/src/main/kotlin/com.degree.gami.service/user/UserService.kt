@@ -1,11 +1,8 @@
 package com.degree.gami.service.user
 
 import com.degree.gami.model.*
-import com.degree.gami.persistence.category.CategoryRepository
 import com.degree.gami.persistence.event.EventRepository
 import com.degree.gami.persistence.user.UserRepository
-import com.degree.gami.persistence.userentities.usercategory.UserCategoryEntity
-import com.degree.gami.persistence.userentities.usercategory.UserCategoryRepository
 import com.degree.gami.persistence.userentities.userevents.UserEventEntity
 import com.degree.gami.persistence.userentities.userevents.UserEventsRepository
 import com.degree.gami.persistence.userentities.userphoto.UserPhotoEntity
@@ -20,12 +17,10 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(private val userRepository: UserRepository,
-                  private val userCategoryRepository: UserCategoryRepository,
                   private val userPhotoRepository: UserPhotoRepository,
                   private val userEventsRepository: UserEventsRepository,
                   private val userConverter: UserConverter,
                   private val eventRepository: EventRepository,
-                  private val categoryRepository: CategoryRepository,
                   private val passwordEncoder: PasswordEncoder,
                   private val principalService: PrincipalService,
                   private val mailSender: JavaMailSender) {
@@ -50,25 +45,6 @@ class UserService(private val userRepository: UserRepository,
         }
 
         return eventsOfUser
-    }
-
-    fun getCategories(): List<CategoryDao> {
-        val categoriesForUser = mutableListOf<CategoryDao>()
-
-        val userCategories = principalService.getPrincipal().userCategories
-        userCategories?.forEach { categoriesForUser.add(userConverter.convertCategoryToDao(it.category)) }
-
-        return categoriesForUser
-    }
-
-    @Transactional
-    fun delete() {
-        val user = principalService.getPrincipal()
-
-        userRepository.delete(user)
-        userCategoryRepository.deleteByUser(user)
-        userPhotoRepository.deleteByUser(user)
-        userEventsRepository.deleteByUser(user)
     }
 
     @Transactional
@@ -167,21 +143,9 @@ class UserService(private val userRepository: UserRepository,
         userRepository.save(user!!)
     }
 
-    fun setCategoriesForUser(username: String, categories: List<CategoryDao>) {
-        categories.forEach {
-            userCategoryRepository.save(
-                    UserCategoryEntity(categoryRepository.findByName(it.name!!), userRepository.findByUser(username))
-            )
-        }
-    }
-
-    fun setPhotos(username: String, photos: List<PhotoDao>) {
+    fun setPhotos(username: String, uri: String) {
         val user = userRepository.findByUser(username)
-        photos.forEach {
-            userPhotoRepository.save(
-                    UserPhotoEntity(it.image, user)
-            )
-        }
+        userPhotoRepository.save(UserPhotoEntity(uri, user))
     }
 
     fun getPhotos(username: String): List<PhotoDao> {

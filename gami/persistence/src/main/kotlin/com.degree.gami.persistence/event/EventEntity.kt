@@ -18,6 +18,7 @@ class EventEntity(
         var name: String? = null,
 
         @field:NotEmpty
+        @Column(length = 1000)
         var description: String? = null,
 
         @field:NotNull

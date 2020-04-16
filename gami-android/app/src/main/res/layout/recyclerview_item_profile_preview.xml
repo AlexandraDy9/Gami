@@ -22,22 +22,24 @@
                 android:id="@+id/text_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:gravity="left"
+                android:gravity="start"
                 android:orientation="vertical">
 
             <TextView
                     android:id="@+id/event_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="left"
+                    android:layout_gravity="start"
+                    android:fontFamily="@font/lato_medium"
                     android:textSize="18sp" />
 
             <TextView
                     android:id="@+id/event_category"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
+                    android:fontFamily="@font/lato_medium"
                     android:layout_weight="1"
                     android:textSize="14sp" />
 
@@ -49,14 +51,16 @@
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="6dp"
+                        android:layout_marginEnd="6dp"
                         android:text="Time: "
+                        android:fontFamily="@font/lato_medium"
                         android:textSize="12sp" />
 
                 <TextView
                         android:id="@+id/event_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_medium"
                         android:textSize="12sp" />
 
                 <TextView
@@ -65,12 +69,14 @@
                         android:layout_marginLeft="6dp"
                         android:layout_marginRight="6dp"
                         android:text="-"
+                        android:fontFamily="@font/lato_medium"
                         android:textSize="12sp" />
 
                 <TextView
                         android:id="@+id/event_finish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/lato_medium"
                         android:textSize="12sp" />
 
             </LinearLayout>

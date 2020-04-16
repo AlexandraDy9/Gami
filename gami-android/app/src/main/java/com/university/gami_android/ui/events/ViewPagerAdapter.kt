@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 
-class ViewPagerAdapter(val type: Boolean, fm: FragmentManager, private var tabNames: List<String>) :
+class ViewPagerAdapter(val type: String, fm: FragmentManager, private var tabNames: List<String>) :
     FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment? {
@@ -13,12 +13,11 @@ class ViewPagerAdapter(val type: Boolean, fm: FragmentManager, private var tabNa
                 val eventListFragment = EventListFragment()
                 eventListFragment.type = type
                 return eventListFragment
-            } //ChildFragment1 at position 0
+            }
         }
         val eventMapFragment = EventMapFragment()
         eventMapFragment.type = type
         return eventMapFragment
-        //ChildFragment2 at position 1
     }
 
     override fun getCount(): Int {

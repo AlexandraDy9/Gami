@@ -1,223 +1,226 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp">
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingTop="10dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
 
         <com.mikhaellopez.circularimageview.CircularImageView
-                android:id="@+id/host_image"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:scaleX="1"
-                android:scaleY="1"
-                android:src="@drawable/ic_user_profile"
-                app:civ_border_color="#000"
-                app:civ_border_width="0dp"
-                app:civ_shadow="true"
-                app:civ_shadow_color="#000"
-                app:civ_shadow_radius="0.5" />
+            android:id="@+id/host_image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:scaleX="1"
+            android:scaleY="1"
+            android:src="@drawable/ic_user_profile"
+            app:civ_border_color="#000"
+            app:civ_border_width="0dp"
+            app:civ_shadow="true"
+            app:civ_shadow_color="#000"
+            app:civ_shadow_radius="0.5" />
 
         <TextView
-                android:id="@+id/host"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/isHosted"
-                android:textSize="20sp"
-                android:layout_marginStart="10dp"
-                android:paddingTop="10dp"
-                android:gravity="center"/>
+            android:id="@+id/host"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:paddingTop="10dp"
+            android:text="@string/isHosted"
+            android:textSize="20sp" />
 
         <TextView
-                android:id="@+id/host_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/colorAccent"
-                android:textSize="20sp"
-                android:clickable="true"
-                android:gravity="center"
-                android:focusable="true" />
+            android:id="@+id/host_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:textColor="@color/colorAccent"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <TextView
-            android:id="@+id/event_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:textColor="@color/colorPrimaryDark"
-            android:paddingTop="10dp"
-            android:gravity="center"/>
+        android:id="@+id/event_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
         <TextView
-                android:id="@+id/startTime_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:textSize="20sp"/>
+            android:id="@+id/startTime_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
 
         <ImageView
-                android:id="@+id/to_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_play_arrow"
-                android:gravity="center"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:tint="@color/cardview_shadow_end_color"/>
+            android:id="@+id/to_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:src="@drawable/ic_play_arrow"
+            android:tint="@color/cardview_shadow_end_color" />
 
         <TextView
-                android:id="@+id/endTime_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="20sp"/>
+            android:id="@+id/endTime_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center">
-        <TextView
-                android:id="@+id/startTime_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_marginStart="15dp"
-                android:textSize="20sp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
         <TextView
-                android:id="@+id/endTime_hour"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="90dp"
-                android:gravity="center"
-                android:textSize="20sp" />
+            android:id="@+id/startTime_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:gravity="center"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/endTime_hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="90dp"
+            android:gravity="center"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp">
-        <TextView
-                android:id="@+id/limit_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/limit_age"
-                android:textSize="20sp"
-                android:gravity="center"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
 
         <TextView
-                android:id="@+id/limit_age_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:gravity="center"/>
+            android:id="@+id/limit_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/limit_age"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/limit_age_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <TextView
-            android:id="@+id/attendees"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/attendees"
-            android:textSize="20sp"
-            android:paddingTop="10dp"
-            android:drawableStart="@drawable/ic_user"
-            android:drawablePadding="10dp"
-            android:layout_gravity="center"
-            android:gravity="center"/>
+        android:id="@+id/attendees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableStart="@drawable/ic_user"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:text="@string/attendees"
+        android:textSize="20sp" />
 
     <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center"
-            android:gravity="center">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ProgressBar
-                android:id="@+id/progress_bar_attendees"
-                android:layout_width="200dp"
-                android:layout_height="100dp"
-                android:indeterminate="false"
-                android:progressDrawable="@drawable/circular_progress_bar"
-                android:background="@drawable/circle_shape"
-                style="?android:attr/progressBarStyleHorizontal" />
+            android:id="@+id/progress_bar_attendees"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:background="@drawable/circle_shape"
+            android:indeterminate="false"
+            android:progressDrawable="@drawable/circular_progress_bar" />
 
         <TextView
-                android:id="@+id/number_of_attendees"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:id="@+id/number_of_attendees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
     </RelativeLayout>
 
     <Button
-            android:id="@+id/join_btn"
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:text="@string/join"
-            android:textSize="20sp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            android:theme="@style/AccentButton"
-            android:textAllCaps="false"
-            style="@style/Widget.AppCompat.Button.Colored" />
+        android:id="@+id/join_btn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="@string/join"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:theme="@drawable/button_round" />
 
     <TextView
-            android:id="@+id/ratings_and_reviews"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="@string/ratings_reviews"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="20sp"/>
+        android:id="@+id/ratings_and_reviews"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:text="@string/ratings_reviews"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp" />
 
     <TextView
-            android:id="@+id/average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:textSize="15sp" />
+        android:id="@+id/average"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:textSize="15sp" />
 
     <RatingBar
-            android:id="@+id/rating_bar_average"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:numStars="5"
-            android:stepSize="0.1"
-            android:isIndicator="true"
-            style="@style/Base.Widget.AppCompat.RatingBar.Small"/>
+        android:id="@+id/rating_bar_average"
+        style="@style/Base.Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:stepSize="0.1" />
 
     <TextView
-            android:id="@+id/write_review"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/write_review"
-            android:textSize="18sp"
-            android:clickable="true"
-            android:textColor="@color/colorAccent"
-            android:paddingTop="10dp"
-            android:focusable="true" />
+        android:id="@+id/write_review"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/write_review"
+        android:textSize="18sp"
+        android:clickable="true"
+        android:textColor="@color/darkBlue"
+        android:paddingTop="10dp"
+        android:focusable="true"  />
 
 </LinearLayout>

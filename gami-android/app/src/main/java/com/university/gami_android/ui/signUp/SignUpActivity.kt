@@ -13,8 +13,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.university.gami_android.R
+import com.university.gami_android.model.SignUpDao
 import com.university.gami_android.model.User
-import com.university.gami_android.ui.hobby_selection.HobbySelectionActivity
+import com.university.gami_android.ui.main.MainActivity
 import com.university.gami_android.util.EditTextWatcher
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,36 +54,38 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
         presenter = SignUpPresenter()
         presenter.bindView(this)
 
-        signUp = findViewById(R.id.signUp_btn)
+        initAttributes()
+        setListeners()
+        validateInputs()
+    }
 
+    private fun initAttributes() {
         userName = findViewById(R.id.username_text)
-        userName.addTextChangedListener(textWatcher)
-
         firstName = findViewById(R.id.firstName_text)
-        firstName.addTextChangedListener(textWatcher)
-
         lastName = findViewById(R.id.lastName_text)
-        lastName.addTextChangedListener(textWatcher)
-
         birthday = findViewById(R.id.birthday_text)
-        birthday.addTextChangedListener(textWatcher)
 
         email = findViewById(R.id.email_text)
-        email.addTextChangedListener(textWatcher)
+        emailLayout = findViewById(R.id.email)
 
         password = findViewById(R.id.password_text)
-        password.addTextChangedListener(textWatcher)
-
         confirmPassword = findViewById(R.id.confirm_password_text)
-        confirmPassword.addTextChangedListener(textWatcher)
 
         confirmPasswordLayout = findViewById(R.id.confirm_password)
         passwordLayout = findViewById(R.id.password)
-        emailLayout = findViewById(R.id.email)
 
+        signUp = findViewById(R.id.signUp_btn)
         back = findViewById(R.id.back_btn)
+    }
 
-        validateInputs()
+    private fun setListeners() {
+        userName.addTextChangedListener(textWatcher)
+        firstName.addTextChangedListener(textWatcher)
+        lastName.addTextChangedListener(textWatcher)
+        birthday.addTextChangedListener(textWatcher)
+        email.addTextChangedListener(textWatcher)
+        password.addTextChangedListener(textWatcher)
+        confirmPassword.addTextChangedListener(textWatcher)
 
         back.setOnClickListener(this)
         birthday.setOnClickListener(this)
@@ -137,9 +140,9 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
         }
     }
 
-    override fun navigateToHobbySelectionActivity(context: Context) {
+    override fun navigateToMainActivity(context: Context) {
         finish()
-        startActivity(Intent(context, HobbySelectionActivity::class.java))
+        startActivity(Intent(context, MainActivity::class.java))
     }
 
     fun validateInputs() {

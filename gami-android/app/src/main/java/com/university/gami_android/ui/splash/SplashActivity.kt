@@ -20,9 +20,6 @@ class SplashActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val pulsator: PulsatorLayout = findViewById(R.id.pulsator)
-        pulsator.start()
-
         val handler = Handler()
         val runnable = Runnable {
             if (PreferenceHandler.getAuthorization().isEmpty()) {

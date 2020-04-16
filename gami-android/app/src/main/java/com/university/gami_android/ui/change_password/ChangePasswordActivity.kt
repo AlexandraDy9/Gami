@@ -17,8 +17,7 @@ import com.university.gami_android.ui.login.LoginActivity
 import com.university.gami_android.util.EditTextWatcher
 
 
-class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
-    View.OnClickListener {
+class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View, View.OnClickListener {
 
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
@@ -47,6 +46,11 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         presenter = ChangePasswordPresenter()
         presenter.bindView(this)
 
+        initAttributes()
+        setListeners()
+    }
+
+    private fun initAttributes() {
         password = findViewById(R.id.password_text)
         passwordLayout = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirm_password_text)
@@ -55,7 +59,9 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         backButton = findViewById(R.id.back)
         doneButton = findViewById(R.id.done_btn)
         doneButton.isEnabled = false
+    }
 
+    private fun setListeners() {
         password.addTextChangedListener(textWatcher)
         confirmPassword.addTextChangedListener(textWatcher)
         backButton.setOnClickListener { finish() }
@@ -65,6 +71,19 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
     override fun navigateToLoginActivity(context: Context) {
         finish()
         startActivity(Intent(context, LoginActivity::class.java))
+    }
+
+    override fun onClick(v: View?) {
+        when (v?.id) {
+            R.id.done_btn -> {
+                if (hasErrorForPassword() && hasErrorForConfirmPassword()) {
+                    presenter.doChangePassword(
+                        ChangePassword(email, password.text.toString()),
+                        appContext()
+                    )
+                }
+            }
+        }
     }
 
     private fun hasErrorForPassword(): Boolean {
@@ -88,22 +107,6 @@ class ChangePasswordActivity : AppCompatActivity(), ChangePasswordContract.View,
         } else {
             confirmPasswordLayout.error = null
             true
-        }
-    }
-
-
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.done_btn -> {
-                if (hasErrorForPassword() &&
-                    hasErrorForConfirmPassword()
-                ) {
-                    presenter.doChangePassword(
-                        ChangePassword(email, password.text.toString()),
-                        appContext()
-                    )
-                }
-            }
         }
     }
 

@@ -2,12 +2,8 @@ package com.university.gami_android.ui.events
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.location.Location
 import android.os.Bundle
-import androidx.core.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -33,18 +29,15 @@ import com.university.gami_android.util.scaleBitmap
 import com.university.gami_android.R
 
 
-class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
-    GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnInfoWindowClickListener,
+class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener,
     GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
 
-    var type: Boolean = false
+    var type: String = ""
     private lateinit var placeAutoComplete: PlacesSearchFragment
 
     private val defaultZoom: Int = 17
     private lateinit var googleMap: GoogleMap
     private lateinit var mapView: MapView
-    private var locationPermission: Boolean = false
-    private var lastKnownLocation: Location? = null
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var presenter: EventMapPresenter
     private var eventList: List<Event> = listOf()
@@ -64,91 +57,29 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
     override fun updateEventList(eventList: List<Event>?) {
         this.eventList = eventList!!
         eventList.forEach {
-            val iconId: Int? = parentContext?.resources?.getIdentifier(
-                "ic_" + it.categoryName,
-                "drawable",
-                parentContext?.packageName
+            val bitmap: Bitmap = getBitmapFromDrawable(
+                parentContext!!,
+                R.drawable.ic_dice
             )
-            val bitmap: Bitmap
+
             val pinBitmap = getBitmapFromDrawable(
                 parentContext!!,
                 R.drawable.ic_pin,
-                android.R.color.holo_green_dark
+                android.R.color.white
             )
+
             val scaledPinBitmap = scaleBitmap(pinBitmap, 120, 120)
-
-            bitmap = if (iconId == null || iconId == 0) {
-                getBitmapFromDrawable(
-                    parentContext!!,
-                    R.drawable.ic_running,
-                    android.R.color.white
-                )
-            } else {
-                getBitmapFromDrawable(parentContext!!, iconId, android.R.color.white)
-            }
-
             val scaledBitmap: Bitmap = scaleBitmap(bitmap, 70, 70)
-            val mergedBitmap = mergeBitmaps(scaledPinBitmap, scaledBitmap, 0, -15)
+
+            val mergedBitmap = mergeBitmaps(scaledPinBitmap, scaledBitmap, -15)
             googleMap.addMarker(
                 MarkerOptions()
                     .position(LatLng(it.latitude, it.longitude))
                     .title(it.name)
-                    .snippet(it.description)
+                    .snippet( if(it.description.length > 10) it.description.take(10) + "..." else it.description )
                     .icon(BitmapDescriptorFactory.fromBitmap(mergedBitmap))
             )
         }
-    }
-
-    private fun getLocationPermission() {
-        if (ContextCompat
-                .checkSelfPermission(
-                    context!!,
-                    android.Manifest.permission.ACCESS_FINE_LOCATION
-                ) == PackageManager.PERMISSION_GRANTED
-        ) {
-            locationPermission = true
-        } else {
-            requestPermissions(
-                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
-                0
-            )
-        }
-    }
-
-    private fun updateLocationUI() {
-        try {
-            if (locationPermission) {
-                googleMap.apply {
-                    isMyLocationEnabled = true
-                    uiSettings.isMyLocationButtonEnabled = true
-                }
-            } else {
-                googleMap.apply {
-                    isMyLocationEnabled = false
-                    uiSettings.isMyLocationButtonEnabled = false
-                }
-
-                lastKnownLocation = null
-                getLocationPermission()
-            }
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message)
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        locationPermission = true
-        when (requestCode) {
-            0 -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locationPermission = true
-            }
-        }
-        updateLocationUI()
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -157,7 +88,6 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
         p0?.mapType = GoogleMap.MAP_TYPE_HYBRID
 
         googleMap.setPadding(0, 120, 0, 0)
-        googleMap.setOnMyLocationButtonClickListener(this)
         googleMap.setOnInfoWindowClickListener(this)
         googleMap.setOnMapClickListener(this)
         googleMap.setOnMarkerClickListener(this)
@@ -171,36 +101,11 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
             setMargins(0, 0, 0, 80)
         }
 
-        getLocationPermission()
-        getDeviceLocation()
-
-        presenter.getEvents(appContext(), type)
-    }
-
-    private fun getDeviceLocation() {
-        try {
-            if (locationPermission) {
-                val locationResult = fusedLocationProviderClient.lastLocation
-                locationResult.addOnCompleteListener(
-                    activity!!
-                ) { task ->
-                    if (task.isSuccessful) {
-                        lastKnownLocation = task.result
-                        moveCamera(
-                            lastKnownLocation?.latitude!!,
-                            lastKnownLocation?.longitude!!
-                        )
-                        updateLocationUI()
-                    } else {
-                        Log.e("Exception: %s", "Current location is null.")
-                        Log.e("Exception: %s", task.exception?.message)
-                        moveCamera(35.234324, 23.2342)
-                        googleMap.uiSettings.isMyLocationButtonEnabled = false
-                    }
-                }
-            }
-        } catch (e: SecurityException) {
-            Log.e("Exception: %s", e.message)
+        if(type == "ALL") {
+            presenter.getEvents(appContext())
+        }
+        else {
+            presenter.getEventsByCategory(appContext(), type)
         }
     }
 
@@ -209,11 +114,7 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
         parentContext = context
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_event_map, container, false)
     }
 
@@ -223,7 +124,7 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity!!)
 
         if (!Places.isInitialized()) {
-            Places.initialize(context!!, "AIzaSyDq1vRTyjxbOqwP8IHDtrXTZH1nPdcdFxI")
+            Places.initialize(context!!, R.string.places.toString())
         }
 
         presenter = EventMapPresenter()
@@ -243,6 +144,7 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
         }
 
         val fragment = childFragmentManager.findFragmentByTag("placesSearchFragment")
+
         placeAutoComplete = fragment as PlacesSearchFragment
         placeAutoComplete.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onPlaceSelected(place: Place) {
@@ -256,52 +158,18 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback,
     }
 
     override fun onInfoWindowClick(p0: Marker?) {
-        if (p0 == null)
-            return
-        startActivity(Intent(appContext(), EventDetailsActivity::class.java).putExtra("EVENT_NAME", p0.title))
-    }
-
-    override fun onMyLocationButtonClick(): Boolean {
-        if (lastKnownLocation == null)
-            return false
-        googleMap.uiSettings.isMapToolbarEnabled = false
-        animateCamera(lastKnownLocation?.latitude!!, lastKnownLocation?.longitude!!)
-        return true
-    }
-
-    private fun moveCamera(latitude: Double, longitude: Double, zoomLevel: Int = defaultZoom) {
-        googleMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    latitude,
-                    longitude
-                ), zoomLevel.toFloat()
-            )
-        )
+        startActivity(Intent(appContext(), EventDetailsActivity::class.java).putExtra("EVENT_NAME", p0?.title))
     }
 
     private fun moveCamera(latLng: LatLng, zoomLevel: Int = defaultZoom) {
-        googleMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng, zoomLevel.toFloat()
             )
         )
     }
 
-    private fun animateCamera(latitude: Double, longitude: Double, zoomLevel: Int = defaultZoom) {
-        googleMap.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    latitude,
-                    longitude
-                ), zoomLevel.toFloat()
-            )
-        )
-    }
-
     private fun animateCamera(latLng: LatLng, zoomLevel: Int = defaultZoom) {
-        googleMap.animateCamera(
-            CameraUpdateFactory.newLatLngZoom(
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                 latLng, zoomLevel.toFloat()
             )
         )

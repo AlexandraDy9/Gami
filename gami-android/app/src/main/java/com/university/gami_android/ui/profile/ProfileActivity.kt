@@ -5,8 +5,9 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
 import android.provider.MediaStore
@@ -18,6 +19,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
 import com.synnapps.carouselview.CarouselView
@@ -25,11 +27,12 @@ import com.synnapps.carouselview.ImageListener
 import com.university.gami_android.R
 import com.university.gami_android.model.Photo
 import com.university.gami_android.model.User
+import com.university.gami_android.model.UserDto
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.util.EditTextWatcher
 import kotlinx.android.synthetic.main.activity_profile.*
+import java.io.File
 import java.io.IOException
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,7 +48,6 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
     private lateinit var profileImage: ImageView
 
     private lateinit var editData: UserDto
-
     private lateinit var presenter: ProfilePresenter
     private lateinit var carouselView: CarouselView
     private var imageList: MutableList<Bitmap> = mutableListOf()
@@ -61,17 +63,21 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
 
-        //todo: from where should i get the toolbar?
-//        setSupportActionBar(toolbar)
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
 
         presenter = ProfilePresenter()
         presenter.bindView(this)
 
+        initAttributes()
+        setListeners()
+
+        title = PreferenceHandler.getUserName()
+        initObserves()
+    }
+
+    private fun initAttributes() {
         carouselView = findViewById(R.id.carousel_view)
-        carouselView.apply {
-            pageCount = imageList.size
-            setImageListener(imageListener)
-        }
 
         email = findViewById(R.id.email)
         backButton = findViewById(R.id.back)
@@ -91,7 +97,13 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
             description.text.toString(),
             ""
         )
+    }
 
+    private fun setListeners() {
+        carouselView.apply {
+            pageCount = imageList.size
+            setImageListener(imageListener)
+        }
 
         firstName.addTextChangedListener(object : EditTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
@@ -121,8 +133,6 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
             }
         })
 
-
-        //todo: what the fuck is this?
         add_photo.setOnClickListener {
             getImageFromGallery()
         }
@@ -130,8 +140,9 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
         birthday.setOnClickListener(this)
         backButton.setOnClickListener { finish() }
         editButton.setOnClickListener(this)
+    }
 
-        title = PreferenceHandler.getUserName()
+    private fun initObserves() {
         presenter.getUser(appContext())
         presenter.userDetails.observe(this, Observer {
             firstName.setText(it?.firstname)
@@ -148,28 +159,6 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
         })
     }
 
-    private fun updatePhotos() {
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
-        if (userPhotos!!.isNotEmpty()) {
-            profileImage.visibility = View.INVISIBLE
-            carouselView.visibility = View.VISIBLE
-            userPhotos?.forEach {
-                val url = URL(it.image)
-                val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
-                imageList.add(bitmap)
-
-                val imageView = ImageView(this)
-                Glide.with(this)
-                    .load(it.image)
-                    .into(imageView)
-
-                imageListener.setImageForPosition(imageList.size - 1, imageView)
-                carouselView.pageCount = carouselView.pageCount + 1
-            }
-        }
-    }
-
     @SuppressLint("SimpleDateFormat", "PrivateResource")
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -179,17 +168,23 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
                 val formatter = SimpleDateFormat(resources.getString(R.string.date_format))
 
                 val datePickerDialog =
-                    DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                        val date: Calendar = Calendar.getInstance()
-                        date.apply {
-                            set(Calendar.YEAR, year)
-                            set(Calendar.MONTH, monthOfYear)
-                            set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                        }
+                    DatePickerDialog(
+                        this,
+                        DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                            val date: Calendar = Calendar.getInstance()
+                            date.apply {
+                                set(Calendar.YEAR, year)
+                                set(Calendar.MONTH, monthOfYear)
+                                set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                            }
 
-                        birthday.setText(formatter.format(date.time))
+                            birthday.setText(formatter.format(date.time))
 
-                    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+                        },
+                        calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH),
+                        calendar.get(Calendar.DAY_OF_MONTH)
+                    )
 
                 datePickerDialog.show()
             }
@@ -210,10 +205,49 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
         }
     }
 
+    private fun updatePhotos() {
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+        if (userPhotos!!.isNotEmpty()) {
+            profileImage.visibility = View.INVISIBLE
+            carouselView.visibility = View.VISIBLE
+            userPhotos?.forEach {
+                val url = Uri.fromFile(File(it.image))
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, url)
+                imageList.add(bitmap)
+
+                val imageView = ImageView(this)
+                Glide.with(this)
+                    .load(it.image)
+                    .into(imageView)
+
+                imageListener.setImageForPosition(imageList.size - 1, imageView)
+                carouselView.pageCount = carouselView.pageCount + 1
+            }
+        }
+    }
+
+
     private fun getImageFromGallery() {
         val photoPickerIntent =
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
         startActivityForResult(photoPickerIntent, PICK_IMAGE_REQUEST)
+    }
+
+    private fun getRealPathFromURI(context: Context, contentUri: Uri?): String {
+        var cursor: Cursor? = null
+        try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = context.contentResolver.query(contentUri!!, proj, null, null, null)
+
+            val index = cursor?.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor?.moveToFirst()
+
+            return cursor!!.getString(index!!)
+        } finally {
+            cursor?.close()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -235,8 +269,10 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
                 imageListener.setImageForPosition(imageList.size - 1, imageView)
                 carouselView.pageCount = carouselView.pageCount + 1
 
+                presenter.uploadUserPhoto(appContext(), getRealPathFromURI(appContext(), uri))
+
             } catch (e: IOException) {
-                Log.e("ProfileActivity", e.message)
+                Log.e("ProfileActivity", e.message!!)
             }
         }
     }

@@ -6,10 +6,6 @@ import org.springframework.stereotype.Service
 
 @Service
 class CategoryConverter {
-
-    fun convertFromDao(categoryDao: CategoryDao) : CategoryEntity =
-            CategoryEntity(categoryDao.name,categoryDao.image)
-
     fun convertToDao(categoryEntity: CategoryEntity): CategoryDao =
             CategoryDao(categoryEntity.name, categoryEntity.image)
 

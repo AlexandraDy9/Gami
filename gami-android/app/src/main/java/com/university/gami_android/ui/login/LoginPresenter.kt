@@ -7,6 +7,7 @@ import com.university.gami_android.R
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
+import com.university.gami_android.model.LoginDao
 import com.university.gami_android.model.SocialLoginDao
 import com.university.gami_android.model.User
 import com.university.gami_android.preferences.PreferenceHandler

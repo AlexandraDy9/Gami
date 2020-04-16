@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +21,7 @@ import com.university.gami_android.util.mergeBitmaps
 import com.university.gami_android.util.scaleBitmap
 import com.university.gami_android.ui.write_review.WriteReviewActivity
 import com.university.gami_android.R
-
+import com.university.gami_android.util.getNavigationBarSize
 
 
 class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
@@ -29,7 +30,7 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
     private lateinit var eventName: String
 
     private lateinit var presenter: EventDetailsPresenter
-    private lateinit var eventDetailsAdapter: EventDetailsAdapter
+    private lateinit var adapter: EventDetailsAdapter
 
     private val defaultZoom: Int = 16
     private lateinit var googleMap: GoogleMap
@@ -40,51 +41,57 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_event_details)
-//        setSupportActionBar(toolbar)
 
+        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
+        presenter = EventDetailsPresenter()
+        presenter.bindView(this)
+
+        initMap()
+
+        eventName = intent.getStringExtra("EVENT_NAME")!!
+        title = eventName
+
+        backBtn = findViewById(R.id.back_to_events)
+        backBtn.setOnClickListener { finish() }
+
+        setupRecycler()
+    }
+
+    private fun initMap() {
         mapView = findViewById(R.id.map)
         mapView.apply {
             onCreate(null)
             onResume()
         }
+
         mapView.getMapAsync(this)
+    }
 
-        eventName = intent.getStringExtra("EVENT_NAME")
+    private fun setupRecycler() {
+        val reviewsRecyclerView: RecyclerView = findViewById(R.id.recyclerView_event_details)
+        reviewsRecyclerView.apply {
+            setPadding(0, 0, 0, getNavigationBarSize(resources))
+            layoutManager = LinearLayoutManager(appContext())
+        }
 
-        title = eventName
+        adapter = EventDetailsAdapter(this)
+        initObservers()
+        reviewsRecyclerView.adapter = adapter
+    }
 
-        presenter = EventDetailsPresenter()
-        presenter.bindView(this)
-
-        backBtn = findViewById(R.id.back_to_events)
-        backBtn.setOnClickListener { finish() }
-
+    private fun initObservers() {
         presenter.apply {
             getEvent(eventName, appContext())
             getHost(eventName, appContext())
             getNumberOfJoinedUsers(eventName, appContext())
         }
 
-        val reviewsRecyclerView: RecyclerView = findViewById(R.id.recyclerView_event_details)
-        reviewsRecyclerView.apply {
-            setPadding(0, 0, 0, getNavigationBarSize())
-            layoutManager = LinearLayoutManager(appContext())
-        }
-
-        eventDetailsAdapter = EventDetailsAdapter(this)
-        initObservers()
-        reviewsRecyclerView.adapter = eventDetailsAdapter
-    }
-
-    private fun initObservers() {
-        presenter.event.observe(this, Observer { event -> eventDetailsAdapter.setEvent(event!!) })
-        presenter.host.observe(this, Observer { host -> eventDetailsAdapter.setHost(host!!) })
-        presenter.numberJoinedUsers.observe(
-            this,
-            Observer { number -> eventDetailsAdapter.setJoinedUsers(number!!) })
-        presenter.reviews.observe(
-            this,
-            Observer { review -> eventDetailsAdapter.setReviewList(review!!) })
+        presenter.event.observe(this, Observer { event -> adapter.setEvent(event!!) })
+        presenter.host.observe(this, Observer { host -> adapter.setHost(host!!) })
+        presenter.numberJoinedUsers.observe(this, Observer { number -> adapter.setJoinedUsers(number!!) })
+        presenter.reviews.observe(this, Observer { review -> adapter.setReviewList(review!!) })
     }
 
     override fun onResume() {
@@ -98,10 +105,39 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
                 .title(event.name)
                 .position(LatLng(event.latitude, event.longitude))
                 .snippet(event.description)
-                .icon(BitmapDescriptorFactory.fromBitmap(loadIcon(event)))
+                .icon(BitmapDescriptorFactory.fromBitmap(loadIcon()))
         )
 
         moveCamera(event.latitude, event.longitude)
+    }
+
+    private fun loadIcon(): Bitmap {
+        val pinBitmap: Bitmap = getBitmapFromDrawable(
+            appContext(),
+            R.drawable.ic_pin,
+            android.R.color.white
+        )
+
+        val scaledPinBitmap: Bitmap = scaleBitmap(pinBitmap, 120, 120)
+        val bitmap: Bitmap = getBitmapFromDrawable(
+            appContext(),
+            R.drawable.ic_dice
+        )
+
+        val scaledBitmap: Bitmap = scaleBitmap(bitmap, 70, 70)
+
+        return mergeBitmaps(scaledPinBitmap, scaledBitmap, -15)
+    }
+
+    private fun moveCamera(latitude: Double, longitude: Double, zoomLevel: Int = defaultZoom) {
+        googleMap.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    latitude,
+                    longitude
+                ), zoomLevel.toFloat()
+            )
+        )
     }
 
     override fun onMapReady(p0: GoogleMap?) {
@@ -114,46 +150,6 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
             Observer { event ->
                 updateEventMapLocation(event!!)
             }
-        )
-    }
-
-    private fun loadIcon(event: Event): Bitmap {
-        val iconId: Int? = resources?.getIdentifier(
-            "ic_" + event.categoryName,
-            "drawable",
-            packageName
-        )
-
-        val pinBitmap: Bitmap = getBitmapFromDrawable(
-            appContext(),
-            R.drawable.ic_pin,
-            android.R.color.holo_green_dark
-        )
-
-        val scaledPinBitmap: Bitmap = scaleBitmap(pinBitmap, 120, 120)
-        val bitmap: Bitmap = if (iconId == null || iconId == 0) {
-            getBitmapFromDrawable(
-                appContext(),
-                R.drawable.ic_running,
-                android.R.color.white
-            )
-        } else {
-            getBitmapFromDrawable(appContext(), iconId, android.R.color.white)
-        }
-
-        val scaledBitmap: Bitmap = scaleBitmap(bitmap, 70, 70)
-
-        return mergeBitmaps(scaledPinBitmap, scaledBitmap, 0, -15)
-    }
-
-    private fun moveCamera(latitude: Double, longitude: Double, zoomLevel: Int = defaultZoom) {
-        googleMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    latitude,
-                    longitude
-                ), zoomLevel.toFloat()
-            )
         )
     }
 
@@ -170,21 +166,6 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
             joinEvent(eventName, appContext())
             getNumberOfJoinedUsers(eventName, appContext())
         }
-    }
-
-    private fun getNavigationBarSize(): Int {
-        if (!hasNavBar())
-            return 0
-        val id: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (id > 0) {
-            return resources.getDimensionPixelSize(id)
-        }
-        return 0
-    }
-
-    private fun hasNavBar(): Boolean {
-        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        return id > 0 && resources.getBoolean(id)
     }
 
     override fun appContext(): Context = applicationContext

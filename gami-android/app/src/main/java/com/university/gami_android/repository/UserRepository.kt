@@ -45,13 +45,16 @@ interface UserRepository {
     @POST("user/bookmark/{eventName}")
     fun addBookmark(@Header("Authorization") auth: String, @Path("eventName") eventName: String): Call<Void>
 
-    @GET("user/photos/{username}")
+    @GET("user/{username}/photos")
     fun getPhotosByUser(@Header("Authorization") auth: String, @Path(value = "username") username: String): Call<List<Photo>>
+
+    @PUT("user/{username}/photos")
+    fun setUserPhotos(@Header("Authorization") auth: String, @Path(value = "username") username: String, @Body photo: Photo): Call<Void>
 
     @GET("user/byUsername/{username}")
     fun getUser(@Header("Authorization") auth: String, @Path(value = "username") username: String): Call<User>
 
-    @GET("user/hostedEvents/{username}")
+    @GET("user/{username}/hostedEvents")
     fun getHostedEvents(@Header("Authorization") auth: String, @Path(value = "username") username: String): Call<List<Event>>
 
     @PUT("user")

@@ -25,10 +25,7 @@ fun getBitmapFromDrawable(context: Context, drawableId: Int, colorId: Int = 0): 
             Bitmap.Config.ARGB_8888
         )
         val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
-//        var paint = Paint()
-//        paint.setColorFilter(PorterDuffColorFilter(context.resources.getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN))
-//        canvas.drawColor(context.resources.getColor(R.color.colorPrimary))
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
 
         return bitmap
@@ -38,18 +35,18 @@ fun getBitmapFromDrawable(context: Context, drawableId: Int, colorId: Int = 0): 
 }
 
 fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
-    var scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
-    var scaleX: Double = newWidth / bitmap.width.toDouble()
-    var scaleY: Double = newHeight / bitmap.height.toDouble()
-    var pivotX: Double = 0.0
-    var pivotY: Double = 0.0
+    val scaledBitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888)
+    val scaleX: Double = newWidth / bitmap.width.toDouble()
+    val scaleY: Double = newHeight / bitmap.height.toDouble()
+    val pivotX = 0.0
+    val pivotY = 0.0
 
-    var scaleMatrix = Matrix()
-    scaleMatrix.setScale(scaleX.toFloat(), scaleY.toFloat(), pivotX.toFloat(), pivotY.toFloat());
+    val scaleMatrix = Matrix()
+    scaleMatrix.setScale(scaleX.toFloat(), scaleY.toFloat(), pivotX.toFloat(), pivotY.toFloat())
 
-    var canvas = Canvas(scaledBitmap);
-    canvas.setMatrix(scaleMatrix);
-    canvas.drawBitmap(bitmap, 0.0f, 0.0f, Paint(Paint.FILTER_BITMAP_FLAG));
+    val canvas = Canvas(scaledBitmap)
+    canvas.setMatrix(scaleMatrix)
+    canvas.drawBitmap(bitmap, 0.0f, 0.0f, Paint(Paint.FILTER_BITMAP_FLAG))
 
     return scaledBitmap;
 }
@@ -57,7 +54,6 @@ fun scaleBitmap(bitmap: Bitmap, newWidth: Int, newHeight: Int): Bitmap {
 fun mergeBitmaps(
     background: Bitmap,
     foreground: Bitmap,
-    horizontalOffset: Int = 0,
     verticalOffset: Int = 0
 ): Bitmap {
     val result = Bitmap.createBitmap(background.width, background.height, background.config)

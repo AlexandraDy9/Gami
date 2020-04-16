@@ -64,6 +64,27 @@ class ProfilePresenter : BasePresenter<ProfileContract.View>(), ProfileContract.
         request.execute(call)
     }
 
+    override fun uploadUserPhoto(context: Context, uri: String) {
+        val call = userRepository.setUserPhotos(PreferenceHandler.getAuthorization(), PreferenceHandler.getUserName(), Photo(uri))
+
+        val request = HttpRequest(object :
+            NetworkCallback<Void> {
+
+            override fun onSuccess(response: Void?) {
+                if (isBound()) {
+                    getView()?.makeToast(context.getString(R.string.edit_successfully), context)
+                }
+            }
+
+            override fun onError(message: String?) {
+                if (isBound()) {
+                    getView()?.makeToast(message!!, context)
+                }
+            }
+        })
+        request.execute(call)
+    }
+
     override fun editUser(user: User, context: Context) {
         val call = userRepository.editUser(PreferenceHandler.getAuthorization(), user)
 

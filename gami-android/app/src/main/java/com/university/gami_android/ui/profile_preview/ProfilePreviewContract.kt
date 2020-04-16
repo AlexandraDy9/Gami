@@ -4,13 +4,11 @@ import android.content.Context
 import com.university.gami_android.ui.base.BaseContract
 
 interface ProfilePreviewContract {
-    interface View : BaseContract.View {
-    }
+    interface View : BaseContract.View
 
     interface Presenter {
         fun getUser(context: Context, username: String)
         fun getPhotos(context: Context, username: String)
         fun getHostedEvents(context: Context, username: String)
-
     }
 }

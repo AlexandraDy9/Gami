@@ -2,7 +2,9 @@ package com.university.gami_android.ui.events
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -14,7 +16,7 @@ import com.university.gami_android.ui.add_event.AddEventActivity
 class EventsActivity : AppCompatActivity() {
 
     private lateinit var extra: Bundle
-    private var type: Boolean = false
+    private var type: String = ""
 
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
@@ -26,7 +28,7 @@ class EventsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_events)
 
         extra = intent.extras!!
-        type = extra.getBoolean("type")
+        type = extra.getString("type")!!
 
         initializeViewPager()
 

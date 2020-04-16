@@ -11,6 +11,7 @@ interface EventMapContract {
     }
 
     interface Presenter {
-        fun getEvents(context: Context, type: Boolean)
+        fun getEventsByCategory(context: Context, game: String)
+        fun getEvents(context: Context)
     }
 }

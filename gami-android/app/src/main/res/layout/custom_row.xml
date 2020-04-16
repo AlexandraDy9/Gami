@@ -21,7 +21,7 @@
             android:id="@+id/text_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:gravity="left"
             android:orientation="vertical">
@@ -31,19 +31,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:fontFamily="@font/lato_light"
-                android:text="Name"
+                android:fontFamily="@font/lato_medium"
                 android:textAllCaps="true"
-                android:textFontWeight="100"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/event_category"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/lato_light"
-                android:text="Category"
+                android:fontFamily="@font/lato"
                 android:textSize="14sp" />
 
             <LinearLayout
@@ -55,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="6dp"
-                    android:fontFamily="@font/lato_light"
+                    android:fontFamily="@font/lato"
                     android:text="Time: "
                     android:textSize="12sp" />
 
@@ -64,7 +61,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lato_light"
-                    android:text="startTime"
                     android:textSize="12sp" />
 
                 <TextView
@@ -72,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="6dp"
                     android:layout_marginRight="6dp"
-                    android:fontFamily="@font/lato_light"
+                    android:fontFamily="@font/lato"
                     android:text="-"
                     android:textSize="12sp" />
 
@@ -80,8 +76,7 @@
                     android:id="@+id/event_finish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/lato_light"
-                    android:text="endTime"
+                    android:fontFamily="@font/lato"
                     android:textSize="12sp" />
 
             </LinearLayout>
@@ -95,6 +90,7 @@
             android:layout_centerVertical="true"
             android:clickable="true"
             android:src="@drawable/ic_cancel"
-            android:tint="@color/colorAccent" />
+            android:tint="@color/colorAccent"
+            android:focusable="true" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

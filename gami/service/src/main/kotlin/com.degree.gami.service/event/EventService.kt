@@ -55,8 +55,8 @@ class EventService(private val eventRepository: EventRepository,
     fun getEventsOfCategory(name: String) : List<EventDao> {
         val eventList = eventRepository.findAll()
         val eventsOfCategory = mutableListOf<EventDao>()
-        eventList.forEach{
-            if(it.category?.name == name){
+        eventList.forEach {
+            if (it.category?.name == name) {
                 eventsOfCategory.add(eventConverter.convertToDao(it))
             }
         }

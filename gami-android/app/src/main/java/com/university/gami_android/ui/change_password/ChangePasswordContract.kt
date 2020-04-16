@@ -6,16 +6,12 @@ import com.university.gami_android.ui.base.BaseContract
 
 class ChangePasswordContract {
     interface View : BaseContract.View {
-
         fun navigateToLoginActivity(context: Context)
     }
 
     interface Presenter {
-
         fun passwordValidation(password: String): Boolean
-
         fun confirmPasswordValidation(password: String, confirmPassword: String): Boolean
-
         fun doChangePassword(changePassword: ChangePassword, context: Context)
     }
 }

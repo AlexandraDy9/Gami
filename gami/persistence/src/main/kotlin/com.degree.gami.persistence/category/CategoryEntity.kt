@@ -1,6 +1,5 @@
 package com.degree.gami.persistence.category
 
-import com.degree.gami.persistence.userentities.usercategory.UserCategoryEntity
 import com.degree.gami.persistence.base.BaseEntity
 import com.degree.gami.persistence.event.EventEntity
 import javax.persistence.*
@@ -17,8 +16,5 @@ class CategoryEntity(
         var image: String? = null,
 
         @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL])
-        var events: MutableList<EventEntity>? = null,
-
-        @OneToMany(mappedBy = "category", cascade = [CascadeType.ALL])
-        var users: MutableList<UserCategoryEntity>? = null
+        var events: MutableList<EventEntity>? = null
 ) : BaseEntity()

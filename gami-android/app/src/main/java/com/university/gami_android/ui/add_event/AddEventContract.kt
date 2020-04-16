@@ -11,9 +11,7 @@ interface AddEventContract {
 
     interface Presenter {
         fun addEvent(event: Event, context: Context)
-
         fun getCategories(context: Context)
-
         fun getAgeRanges(context: Context)
     }
 }

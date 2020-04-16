@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.university.gami_android.R
 import com.university.gami_android.model.Event
 import com.university.gami_android.ui.event_details.EventDetailsActivity
+import com.university.gami_android.util.getNavigationBarSize
 import com.university.gami_android.util.goneUnless
 
 class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, JoinedEventAdapter.ItemClickListener {
@@ -45,7 +46,7 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
         listview.apply {
             layoutManager = LinearLayoutManager(appContext())
             adapter = adapterJoined
-            setPadding(0, 0, 0, getNavigationBarSize())
+            setPadding(0, 0, 0, getNavigationBarSize(resources))
         }
 
         progressBar = findViewById(R.id.progress_bar_join)
@@ -88,21 +89,6 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
         }
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel") { _, _ -> }
         alertDialog.show()
-    }
-
-    private fun getNavigationBarSize(): Int {
-        if (!hasNavBar())
-            return 0
-        val id: Int = resources.getIdentifier("navigation_bar_height", "dimen", "android")
-        if (id > 0) {
-            return resources.getDimensionPixelSize(id)
-        }
-        return 0
-    }
-
-    private fun hasNavBar(): Boolean {
-        val id = resources.getIdentifier("config_showNavigationBar", "bool", "android")
-        return id > 0 && resources.getBoolean(id)
     }
 
     override fun onDestroy() {

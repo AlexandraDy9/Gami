@@ -5,6 +5,7 @@ import android.util.Patterns
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
+import com.university.gami_android.model.SignUpDao
 import com.university.gami_android.model.User
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.UserRepository
@@ -27,7 +28,7 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
                     PreferenceHandler.setUserFirstName(response.firstname)
                     PreferenceHandler.setUserEmail(response.email)
                     PreferenceHandler.setUserName(response.user)
-                    getView()?.navigateToHobbySelectionActivity(context)
+                    getView()?.navigateToMainActivity(context)
                 }
             }
 

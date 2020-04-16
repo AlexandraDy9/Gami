@@ -11,9 +11,10 @@ import com.bumptech.glide.Glide
 import com.university.gami_android.R
 import com.university.gami_android.model.Event
 import com.university.gami_android.model.Host
+import com.university.gami_android.model.ReviewDao
 import com.university.gami_android.preferences.PreferenceHandler
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import com.university.gami_android.util.formatOnlyDate
+import com.university.gami_android.util.formatOnlyHour
 import kotlin.math.roundToInt
 
 
@@ -91,7 +92,7 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
 
         @RequiresApi(Build.VERSION_CODES.O)
         fun bindView() {
-            val hostImage = itemView.findViewById<ImageView>(R.id.host_image)
+            val hostImage: ImageView = itemView.findViewById(R.id.host_image)
             val hostName: TextView = itemView.findViewById(R.id.host_name)
 
             val eventDescription: TextView = itemView.findViewById(R.id.event_description)
@@ -107,17 +108,23 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
             val ratingAverage: RatingBar = itemView.findViewById(R.id.rating_bar_average)
 
             val writeBtn: TextView = itemView.findViewById(R.id.write_review)
-            if(listReviewDao.firstOrNull{it.username == PreferenceHandler.getUserName()} != null) {
+            val joinBtn: Button = itemView.findViewById(R.id.join_btn)
+
+            if (listReviewDao.firstOrNull { it.username == PreferenceHandler.getUserName() } != null) {
                 writeBtn.isEnabled = false
                 writeBtn.setTextColor(itemView.resources.getColor(R.color.unavailable_color))
             }
 
-            val joinBtn: Button = itemView.findViewById(R.id.join_btn)
-
             host?.let { host ->
                 if (host.name == PreferenceHandler.getUserName()) {
-                    joinBtn.isEnabled = false
-                    writeBtn.isEnabled = false
+                    joinBtn.apply {
+                        isEnabled = false
+                        joinBtn.setTextColor(itemView.resources.getColor(R.color.unavailable_color))
+                    }
+                    writeBtn.apply {
+                        isEnabled = false
+                        setTextColor(itemView.resources.getColor(R.color.unavailable_color))
+                    }
                 }
 
                 if (host.image != null) {
@@ -136,16 +143,11 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
             event?.let { event ->
                 eventDescription.text = event.description
 
-                val formatterDate = DateTimeFormatter.ofPattern("dd, MMM, yyyy")
-                val formatterHour = DateTimeFormatter.ofPattern("HH:mm")
+                startDate.text = formatOnlyDate(event.startTime)
+                startHour.text = formatOnlyHour(event.startTime)
 
-                val startLocalDateTime = LocalDateTime.parse(event.startTime)
-                val endLocalDateTime = LocalDateTime.parse(event.endTime)
-
-                startDate.text = formatterDate.format(startLocalDateTime)
-                startHour.text = formatterHour.format(startLocalDateTime)
-                endDate.text = formatterDate.format(endLocalDateTime)
-                endHour.text = formatterHour.format(endLocalDateTime)
+                endDate.text = formatOnlyDate(event.endTime)
+                endHour.text = formatOnlyHour(event.endTime)
 
                 limitAge.text = String.format(
                     " %s to %s years old",
@@ -160,12 +162,16 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
                     String.format(" %s / %s", numberJoinedUsers.toString(), event.numberOfAttendees)
 
                 if (attendees.progress == event.numberOfAttendees)
-                    numberOfAttendees.text = itemView.resources.getString(R.string.attendees_full_message)
+                    numberOfAttendees.text =
+                        itemView.resources.getString(R.string.attendees_full_message)
             }
 
             joinBtn.setOnClickListener {
                 itemClickListener.onJoinClick()
-                joinBtn.isEnabled = false
+                joinBtn.apply {
+                    isEnabled = false
+                    joinBtn.setTextColor(itemView.resources.getColor(R.color.unavailable_color))
+                }
             }
 
             writeBtn.setOnClickListener {
@@ -174,7 +180,7 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
 
             if (listReviewDao.isNotEmpty()) {
                 val averageText =
-                    (listReviewDao.map {it.rating!! }.average() * 10.0).roundToInt() / 10.0
+                    (listReviewDao.map { it.rating!! }.average() * 10.0).roundToInt() / 10.0
 
                 average.text = String.format("%s / 5", averageText.toString())
                 ratingAverage.rating = averageText.toFloat()

@@ -10,6 +10,3 @@ import com.bumptech.glide.Glide
 fun ImageView.load(context: Context, image:Int){
     Glide.with(context).load(image).into(this)
 }
-
-fun drawableResOf(app: Context, @DrawableRes drawableId: Int) =
-    ContextCompat.getDrawable(app, drawableId)

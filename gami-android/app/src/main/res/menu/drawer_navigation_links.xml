@@ -6,12 +6,12 @@
         <item
             android:id="@+id/favorites"
             android:icon="@drawable/ic_five_pointed_star"
-            android:title="Favorites" />
+            android:title="@string/menu_favorites" />
 
         <item
             android:id="@+id/events"
             android:icon="@drawable/ic_calendar"
-            android:title="Events" />
+            android:title="@string/menu_my_events" />
     </group>
 
 </menu>

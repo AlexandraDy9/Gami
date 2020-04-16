@@ -28,21 +28,29 @@ class WriteReviewActivity : AppCompatActivity(), WriteReviewContract.View, View.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_write_review)
 
-        eventName = intent.getStringExtra("EVENT_NAME")
+        eventName = intent.getStringExtra("EVENT_NAME")!!
 
         presenter = WriteReviewPresenter()
         presenter.bindView(this)
 
+        initAttributes()
+        setListeners()
+    }
+
+    private fun initAttributes() {
         backBtn = findViewById(R.id.back_btn)
         submitBtn = findViewById(R.id.submit_btn)
         rating = findViewById(R.id.new_rating)
 
         reviewLayout = findViewById(R.id.new_review)
         reviewText = findViewById(R.id.new_review_text)
+    }
 
+    private fun setListeners() {
         backBtn.setOnClickListener(this)
         submitBtn.setOnClickListener(this)
     }
+
 
     override fun onClick(v: View?) {
         when(v?.id) {

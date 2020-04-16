@@ -14,6 +14,7 @@ import com.university.gami_android.ui.base.BasePresenter
 
 class ProfilePreviewPresenter : BasePresenter<ProfilePreviewContract.View>(),
     ProfilePreviewContract.Presenter {
+
     private var userRepository: UserRepository = RetrofitClientInstance.retrofitInstance?.create(
         UserRepository::class.java
     )!!
@@ -21,6 +22,7 @@ class ProfilePreviewPresenter : BasePresenter<ProfilePreviewContract.View>(),
     var userDetails = MutableLiveData<User>()
     var userPhotos = MutableLiveData<List<Photo>>()
     var hostedEvents = MutableLiveData<List<Event>>()
+
     override fun getUser(context: Context, username: String) {
         val call = userRepository.getUser(PreferenceHandler.getAuthorization(), username)
         val request = HttpRequest(object :

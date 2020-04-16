@@ -15,6 +15,7 @@ import com.facebook.login.LoginResult
 import com.facebook.login.widget.LoginButton
 import com.google.android.material.textfield.TextInputEditText
 import com.university.gami_android.R
+import com.university.gami_android.model.LoginDao
 import com.university.gami_android.ui.forgot_password.ForgotPasswordActivity
 import com.university.gami_android.ui.main.MainActivity
 import com.university.gami_android.ui.signUp.SignUpActivity
@@ -41,28 +42,19 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         }
     }
 
-    override fun onClick(p0: View?) {
-        when (p0?.id) {
-            R.id.login_button -> {
-                presenter.doLogin(loginData, appContext())
-            }
-
-            R.id.sign_up -> {
-                navigateToSignUpActivity(appContext())
-            }
-
-            R.id.forgot_pass -> {
-                navigateToForgotPasswordActivity(appContext())
-            }
-        }
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         presenter = LoginPresenter()
         presenter.bindView(this)
 
+        initAttributes()
+        validateInputs()
+        setListeners()
+        fbLoginInit()
+    }
+
+    private fun initAttributes() {
         username = findViewById(R.id.username_text)
         username.addTextChangedListener(textWatcher)
         password = findViewById(R.id.password_text)
@@ -71,15 +63,13 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         loginBtn = findViewById(R.id.login_button)
         signUp = findViewById(R.id.sign_up)
         forgotPass = findViewById(R.id.forgot_pass)
+        progressBar = findViewById(R.id.progress_bar_login)
+    }
 
-        validateInputs()
-
+    private fun setListeners() {
         loginBtn.setOnClickListener(this)
         signUp.setOnClickListener(this)
         forgotPass.setOnClickListener(this)
-        progressBar = findViewById(R.id.progress_bar_login)
-
-        fbLoginInit()
     }
 
     private fun fbLoginInit() {
@@ -109,17 +99,21 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    var tokenTracker: AccessTokenTracker = object : AccessTokenTracker() {
-        override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
-            if (currentAccessToken == null) {
-                makeToast("Not logged in", appContext())
-            } else {
-                presenter.doFacebookLogin(currentAccessToken, appContext())
-                progressBar.visibility = View.VISIBLE
+    override fun onClick(p0: View?) {
+        when (p0?.id) {
+            R.id.login_button -> {
+                presenter.doLogin(loginData, appContext())
+            }
+
+            R.id.sign_up -> {
+                navigateToSignUpActivity(appContext())
+            }
+
+            R.id.forgot_pass -> {
+                navigateToForgotPasswordActivity(appContext())
             }
         }
     }
-
 
     override fun navigateToMainActivity(context: Context) {
         finish()
@@ -134,6 +128,17 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
 
     override fun navigateToForgotPasswordActivity(context: Context) {
         startActivity(Intent(context, ForgotPasswordActivity::class.java))
+    }
+
+    var tokenTracker: AccessTokenTracker = object : AccessTokenTracker() {
+        override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
+            if (currentAccessToken == null) {
+                makeToast("Not logged in", appContext())
+            } else {
+                presenter.doFacebookLogin(currentAccessToken, appContext())
+                progressBar.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun appContext(): Context {

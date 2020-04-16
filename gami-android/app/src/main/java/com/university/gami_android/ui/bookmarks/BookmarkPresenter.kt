@@ -12,8 +12,7 @@ import com.university.gami_android.ui.base.BasePresenter
 
 class BookmarkPresenter : BasePresenter<BookmarkContract.View>(), BookmarkContract.Presenter {
 
-    private var userRepository: UserRepository = RetrofitClientInstance.retrofitInstance?.create(
-        UserRepository::class.java)!!
+    private var userRepository: UserRepository = RetrofitClientInstance.retrofitInstance?.create(UserRepository::class.java)!!
 
     override fun showBookmarks(context: Context) {
         val call = userRepository.getBookmarks(PreferenceHandler.getAuthorization())

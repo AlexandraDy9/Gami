@@ -7,7 +7,6 @@ import com.university.gami_android.ui.base.BaseContract
 interface JoinedEventsContract {
     interface View : BaseContract.View {
         fun navigateToMainActivity(context: Context)
-
         fun updateEventsList(events: List<Event>?)
     }
 
