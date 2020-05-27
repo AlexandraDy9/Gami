@@ -6,14 +6,17 @@ import com.degree.gami.persistence.event.EventRepository
 import com.degree.gami.persistence.userentities.userevents.UserEventEntity
 import com.degree.gami.persistence.userentities.userevents.UserEventsRepository
 import com.degree.gami.service.principal.PrincipalService
+import com.degree.gami.service.user.UserConverter
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 import javax.validation.Valid
 
 @Service
 class EventService(private val eventRepository: EventRepository,
                    private val userEventsRepository: UserEventsRepository,
                    private val eventConverter: EventConverter,
+                   private val userConverter: UserConverter,
                    private val eventValidation: EventValidation,
                    private val principalService: PrincipalService,
                    private val ageRangeRepository: AgeRangeRepository) {
@@ -52,12 +55,14 @@ class EventService(private val eventRepository: EventRepository,
         return eventConverter.convertToDao(event!!)
     }
 
-    fun getEventsOfCategory(name: String) : List<EventDao> {
+    fun getEventsByCategory(name: String) : List<EventDao> {
         val eventList = eventRepository.findAll()
         val eventsOfCategory = mutableListOf<EventDao>()
         eventList.forEach {
-            if (it.category?.name == name) {
-                eventsOfCategory.add(eventConverter.convertToDao(it))
+            if(LocalDateTime.now().isBefore(it.timeRange?.startTime)) {
+                if (it.category?.name == name) {
+                    eventsOfCategory.add(eventConverter.convertToDao(it))
+                }
             }
         }
         return eventsOfCategory
@@ -67,9 +72,27 @@ class EventService(private val eventRepository: EventRepository,
         val events = eventRepository.findAll()
         val listEvents = mutableListOf<EventDao>()
 
-        events.forEach {listEvents.add(eventConverter.convertToDao(it)) }
+        events.forEach {
+            if(LocalDateTime.now().isBefore(it.timeRange?.startTime)) {
+                listEvents.add(eventConverter.convertToDao(it))
+            }
+        }
 
         return listEvents
+    }
+
+
+    fun getAllJoinedUsers(eventName: String): List<UserDao> {
+        val joinedUsers = mutableListOf<UserDao>()
+
+        val users = userEventsRepository.findAllByEventName(eventName)
+        users.forEach {
+            if (!it.isHost) {
+                joinedUsers.add(userConverter.convertToDao(it.user)!!)
+            }
+        }
+
+        return joinedUsers
     }
 
     @Transactional

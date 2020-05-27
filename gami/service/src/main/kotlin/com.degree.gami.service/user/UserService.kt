@@ -8,7 +8,7 @@ import com.degree.gami.persistence.userentities.userevents.UserEventsRepository
 import com.degree.gami.persistence.userentities.userphoto.UserPhotoEntity
 import com.degree.gami.persistence.userentities.userphoto.UserPhotoRepository
 import com.degree.gami.service.principal.PrincipalService
-import org.springframework.mail.SimpleMailMessage
+import org.springframework.mail.javamail.MimeMessageHelper
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
@@ -127,12 +127,13 @@ class UserService(private val userRepository: UserRepository,
     @Transactional
     fun sendMail(sendMail: SendMailDao) {
         val email = Email(sendMail.email)
-        val mailMessage = SimpleMailMessage()
+        val mimeMessage = mailSender.createMimeMessage()
+        val mailMessage = MimeMessageHelper(mimeMessage, "utf-8")
         mailMessage.setSubject(email.subject)
         mailMessage.setFrom(email.from)
-        mailMessage.setTo(email.to)
-        mailMessage.setText(email.messageText)
-        mailSender.send(mailMessage)
+        mailMessage.setTo(email.to!!)
+        mailMessage.setText(email.messageText, true)
+        mailSender.send(mimeMessage)
     }
 
     @Transactional

@@ -11,28 +11,33 @@ import javax.validation.Valid
 class EventController(private val eventService: EventService) {
 
     @PostMapping
-    fun add(@Valid @RequestBody event: EventDao){
+    fun add(@Valid @RequestBody event: EventDao) {
         eventService.add(event)
     }
 
     @GetMapping(value = ["/byId/{id}"])
-    fun getById(@Valid @PathVariable id: Long): EventDao{
+    fun getById(@Valid @PathVariable id: Long): EventDao {
         return eventService.getById(id)
     }
 
     @GetMapping(value = ["/byName/{name}"])
-    fun getByName(@Valid @PathVariable name: String): EventDao{
+    fun getByName(@Valid @PathVariable name: String): EventDao {
         return eventService.getByName(name)
     }
 
     @GetMapping
-    fun getAll() : List<EventDao> {
+    fun getAll(): List<EventDao> {
         return eventService.getAll()
     }
 
     @GetMapping(value = ["/category/{name}"])
-    fun getEventsOfCategory(@Valid @PathVariable name: String) : List<EventDao> {
-        return eventService.getEventsOfCategory(name)
+    fun getEventsByCategory(@Valid @PathVariable name: String): List<EventDao> {
+        return eventService.getEventsByCategory(name)
+    }
+
+    @GetMapping(value = ["/joinedUsers/{name}"])
+    fun getAllJoinedUsers(@Valid @PathVariable name: String): List<UserDao> {
+        return eventService.getAllJoinedUsers(name)
     }
 
     @PutMapping(value = ["{name}"])
@@ -51,17 +56,17 @@ class EventController(private val eventService: EventService) {
     }
 
     @GetMapping(value = ["{name}/average"])
-    fun getAverageRating(@Valid @PathVariable name: String) : Double {
+    fun getAverageRating(@Valid @PathVariable name: String): Double {
         return eventService.getAverageRating(name)
     }
 
     @GetMapping(value = ["{name}/host"])
-    fun getHostDetails(@Valid @PathVariable name: String) : HostDao {
+    fun getHostDetails(@Valid @PathVariable name: String): HostDao {
         return eventService.getHostDetails(name)
     }
 
     @GetMapping(value = ["{name}/joinedUsers"])
-    fun getNumberOfJoinedUsers(@Valid @PathVariable name: String) : Int {
+    fun getNumberOfJoinedUsers(@Valid @PathVariable name: String): Int {
         return eventService.getNumberOfJoinedUsers(name)
     }
 

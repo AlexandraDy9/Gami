@@ -15,10 +15,10 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="model" options="-parameters" />
-      <module name="persistence" options="-parameters" />
-      <module name="service" options="-parameters" />
-      <module name="webapp" options="-parameters" />
+      <module name="model" options="" />
+      <module name="persistence" options="" />
+      <module name="service" options="" />
+      <module name="webapp" options="" />
     </option>
   </component>
 </project>

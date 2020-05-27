@@ -1,6 +1,6 @@
 package com.degree.gami.model
 
-class AgeRangeDao (
+data class AgeRangeDao (
     var ageMin: Int,
     var ageMax: Int
 )

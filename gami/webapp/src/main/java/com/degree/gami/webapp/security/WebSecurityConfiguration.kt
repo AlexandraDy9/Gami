@@ -17,6 +17,7 @@ import org.springframework.session.web.http.HeaderHttpSessionIdResolver
 import org.springframework.session.web.http.HttpSessionIdResolver
 
 
+
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -28,7 +29,6 @@ class WebSecurityConfig(private val userDetailsService: CustomUserDetailsService
                 .httpBasic().and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/user/register").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/social/signup").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/principal").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/user/sendMail").permitAll()
                 .antMatchers(HttpMethod.PUT, "/api/user/changePassword").permitAll()
