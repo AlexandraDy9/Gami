@@ -73,8 +73,8 @@ class UserController(private val userService: UserService,
     }
 
     @PostMapping(value = ["/sendMail"])
-    fun sendMail(@Valid @RequestBody sendMail: SendMailDao) {
-        userService.sendMail(sendMail)
+    fun sendMail(@Valid @RequestBody sendMail: SendMailDao) : Boolean {
+        return userService.sendMail(sendMail)
     }
 
     @PutMapping(value = ["/changePassword"])

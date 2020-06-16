@@ -65,11 +65,6 @@ class EventController(private val eventService: EventService) {
         return eventService.getHostDetails(name)
     }
 
-    @GetMapping(value = ["{name}/joinedUsers"])
-    fun getNumberOfJoinedUsers(@Valid @PathVariable name: String): Int {
-        return eventService.getNumberOfJoinedUsers(name)
-    }
-
     @GetMapping(value = ["{name}/reviews"])
     fun getReviews(@Valid @PathVariable name: String): List<ReviewDao> {
         return eventService.getReviews(name)

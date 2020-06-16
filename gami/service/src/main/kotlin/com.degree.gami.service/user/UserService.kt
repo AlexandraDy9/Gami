@@ -125,15 +125,20 @@ class UserService(private val userRepository: UserRepository,
     }
 
     @Transactional
-    fun sendMail(sendMail: SendMailDao) {
-        val email = Email(sendMail.email)
-        val mimeMessage = mailSender.createMimeMessage()
-        val mailMessage = MimeMessageHelper(mimeMessage, "utf-8")
-        mailMessage.setSubject(email.subject)
-        mailMessage.setFrom(email.from)
-        mailMessage.setTo(email.to!!)
-        mailMessage.setText(email.messageText, true)
-        mailSender.send(mimeMessage)
+    fun sendMail(sendMail: SendMailDao) : Boolean{
+        if(userRepository.findByEMail(sendMail.email) != null) {
+            val email = Email(sendMail.email)
+            val mimeMessage = mailSender.createMimeMessage()
+            val mailMessage = MimeMessageHelper(mimeMessage, "utf-8")
+            mailMessage.setSubject(email.subject)
+            mailMessage.setFrom(email.from)
+            mailMessage.setTo(email.to!!)
+            mailMessage.setText(email.messageText, true)
+            mailSender.send(mimeMessage)
+            return true
+        }
+
+        return false
     }
 
     @Transactional

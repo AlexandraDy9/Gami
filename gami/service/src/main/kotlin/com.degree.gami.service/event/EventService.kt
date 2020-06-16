@@ -87,11 +87,10 @@ class EventService(private val eventRepository: EventRepository,
 
         val users = userEventsRepository.findAllByEventName(eventName)
         users.forEach {
-            if (!it.isHost) {
+            if (!it.isHost && it.isJoin) {
                 joinedUsers.add(userConverter.convertToDao(it.user)!!)
             }
         }
-
         return joinedUsers
     }
 
@@ -176,19 +175,6 @@ class EventService(private val eventRepository: EventRepository,
         return host!!
     }
 
-    fun getNumberOfJoinedUsers(eventName: String): Int {
-        var counter = 0
-
-        val userEvents = userEventsRepository.findAll()
-        userEvents.forEach {
-            if(it.event?.name == eventName && it.isJoin) {
-                counter ++
-            }
-        }
-
-        return counter
-    }
-
     fun getReviews(@Valid name: String): List<ReviewDao> {
         val userEvents = userEventsRepository.findAllByEventName(name)
         val listReviews = mutableListOf<ReviewDao>()
@@ -207,7 +193,7 @@ class EventService(private val eventRepository: EventRepository,
         val ageRanges = ageRangeRepository.findAll()
         val listAgeRanges = mutableListOf<AgeRangeDao>()
 
-        ageRanges.forEach { it -> listAgeRanges.add(eventConverter.convertToAgeRangeDao(it)) }
+        ageRanges.forEach { listAgeRanges.add(eventConverter.convertToAgeRangeDao(it)) }
         return listAgeRanges
     }
 }
