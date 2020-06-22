@@ -14,10 +14,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -47,6 +44,10 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
     private lateinit var editButton: Button
     private lateinit var profileImage: ImageView
 
+
+    private lateinit var progressBar: RelativeLayout
+    private var countSuccessRequest = 0
+
     private lateinit var editData: UserDto
     private lateinit var presenter: ProfilePresenter
     private lateinit var carouselView: CarouselView
@@ -68,6 +69,9 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
 
         presenter = ProfilePresenter()
         presenter.bindView(this)
+
+        progressBar = findViewById(R.id.progress_bar)
+        progressBar.visibility = View.VISIBLE
 
         initAttributes()
         setListeners()
@@ -274,6 +278,15 @@ class ProfileActivity : AppCompatActivity(), ProfileContract.View, View.OnClickL
             } catch (e: IOException) {
                 Log.e("ProfileActivity", e.message!!)
             }
+        }
+    }
+
+    override fun progressBarVisibility() {
+        countSuccessRequest++
+
+        //get user, photos
+        if(countSuccessRequest >= 2) {
+            progressBar.visibility = View.INVISIBLE
         }
     }
 

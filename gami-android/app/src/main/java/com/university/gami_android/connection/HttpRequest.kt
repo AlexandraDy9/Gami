@@ -23,7 +23,7 @@ class HttpRequest<T>(private val networkCallback: NetworkCallback<T>) : AsyncTas
                 httpResponse.isSuccessful = true
                 return httpResponse
             }
-            val jsonObject = JSONObject(response.errorBody()?.string())
+            val jsonObject = JSONObject(response.errorBody()?.string()!!)
             httpResponse.error = jsonObject.get("message").toString()
             return httpResponse
         } catch (e: JSONException) {

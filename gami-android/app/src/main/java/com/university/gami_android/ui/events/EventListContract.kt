@@ -8,11 +8,11 @@ interface EventListContract {
     interface View : BaseContract.View {
         fun updateEventList(eventList: List<Event>?)
         fun updateBookmarkedEventsList(eventList: List<Event>?)
+        fun progressBarVisibility()
     }
 
     interface Presenter {
-        fun getEventsByCategory(context: Context, game: String)
-        fun getEvents(context: Context)
+        fun getEvents(context: Context, game: String = "")
         fun getBookmarkedEvents(context: Context)
     }
 }

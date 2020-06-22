@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
@@ -22,6 +25,7 @@ import com.university.gami_android.model.Photo
 import com.university.gami_android.ui.event_details.EventDetailsActivity
 import com.university.gami_android.util.getNavigationBarSize
 import kotlinx.android.synthetic.main.activity_events.*
+import java.io.File
 import java.net.URL
 
 
@@ -30,6 +34,9 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
 
     private lateinit var backButton: ImageView
     private lateinit var profileImage: ImageView
+
+    private lateinit var progressBar: RelativeLayout
+    private var countSuccessRequest = 0
 
     private lateinit var presenter: ProfilePreviewPresenter
 
@@ -57,6 +64,9 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
 
         val username = intent.getStringExtra("HOST_NAME")
         title = username
+
+        progressBar = findViewById(R.id.progress_bar)
+        progressBar.visibility = View.VISIBLE
 
         carouselView = findViewById(R.id.carousel_view)
         carouselView.pageCount = imageList.size
@@ -114,8 +124,8 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
             profileImage.visibility = View.INVISIBLE
             carouselView.visibility = View.VISIBLE
             userPhotos.forEach {
-                val url = URL(it.image)
-                val bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream())
+                val url = Uri.fromFile(File(it.image))
+                val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, url)
                 imageList.add(bitmap)
 
                 val imageView = ImageView(this)
@@ -126,6 +136,15 @@ class ProfilePreviewActivity : AppCompatActivity(), ProfilePreviewContract.View,
                 imageListener.setImageForPosition(imageList.size - 1, imageView)
                 carouselView.pageCount = carouselView.pageCount + 1
             }
+        }
+    }
+
+    override fun progressBarVisibility() {
+        countSuccessRequest++
+
+        //get user, photos, hostedEvents
+        if(countSuccessRequest >= 3) {
+            progressBar.visibility = View.INVISIBLE
         }
     }
 

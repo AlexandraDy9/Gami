@@ -1,7 +1,10 @@
 package com.university.gami_android.ui.add_event
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
+import com.university.gami_android.R
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
@@ -11,6 +14,7 @@ import com.university.gami_android.model.Event
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.EventRepository
 import com.university.gami_android.ui.base.BasePresenter
+import java.time.LocalDateTime
 
 
 class AddEventPresenter : BasePresenter<AddEventContract.View>(), AddEventContract.Presenter {
@@ -28,6 +32,10 @@ class AddEventPresenter : BasePresenter<AddEventContract.View>(), AddEventContra
 
             override fun onSuccess(response: Void?) {
                 if (isBound()) {
+                    getView()?.makeToast(
+                        getView()?.appContext()?.getString(R.string.add_event_success)!!,
+                        context
+                    )
                     getView()?.navigateToHomeActivity(context)
                 }
             }
@@ -81,5 +89,32 @@ class AddEventPresenter : BasePresenter<AddEventContract.View>(), AddEventContra
             }
         })
         request.execute(call)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun fieldsValidation(event: Event, context: Context): Boolean =
+        event.name.isBlank() ||
+                event.latitude == 0.0 ||
+                event.longitude == 0.0 ||
+                event.description.isBlank() ||
+                event.numberOfAttendees == 0 ||
+                event.categoryName.isBlank() ||
+                event.ageMin == 0 ||
+                event.ageMax == 0 ||
+                event.startTime.isBlank() ||
+                event.endTime.isBlank() || dateTimeValidation(event.startTime, event.endTime, context)
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    override fun dateTimeValidation(startTime: String, endTime: String, context: Context): Boolean {
+        if(LocalDateTime.parse(startTime).isAfter(LocalDateTime.parse(endTime)) ||
+            LocalDateTime.parse(startTime).isBefore(LocalDateTime.now())) {
+            getView()?.makeToast(
+                getView()?.appContext()?.getString(R.string.date_time_error)!!,
+                context
+            )
+            return true
+        }
+        return false
     }
 }

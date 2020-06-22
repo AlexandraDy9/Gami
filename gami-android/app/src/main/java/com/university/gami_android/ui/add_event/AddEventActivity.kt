@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.location.Address
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -13,11 +15,6 @@ import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.google.android.gms.common.api.Status
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import com.university.gami_android.R
 import com.university.gami_android.model.Event
 import com.university.gami_android.ui.main.MainActivity
@@ -29,6 +26,7 @@ import java.util.*
 class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventContract.View {
     private lateinit var backButton: ImageView
 
+    private lateinit var location: EditText
     private lateinit var name: EditText
     private lateinit var description: EditText
     private lateinit var numberOfAttendees: EditText
@@ -49,52 +47,37 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
     private var lat: Double = 0.0
     private var long: Double = 0.0
 
-    private var start: String? = null
-    private var end: String? = null
+    private var start: String = ""
+    private var end: String = ""
 
     private var categoryList: MutableList<String> = mutableListOf()
     private var ages: MutableList<String> = mutableListOf()
     private var calendar: String? = null
 
+    private lateinit var gc: Geocoder
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        gc = Geocoder(applicationContext)
 
         setContentView(R.layout.activity_add_event)
         presenter = AddEventPresenter()
         presenter.bindView(this)
 
         initAttributes()
-        setListeners()
 
         presenter.getCategories(this)
         presenter.getAgeRanges(this)
         initializeObservers()
 
-        if (!Places.isInitialized()) {
-            Places.initialize(this, R.string.places.toString())
-        }
-
-        //val searchFragment = supportFragmentManager.findFragmentById(R.id.add_event_search) as AutocompleteSupportFragment
-        // val list = listOf(Place.Field.ID, Place.Field.NAME, Place.Field.LAT_LNG)
-//
-//        searchFragment.setPlaceFields(list)
-//        searchFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
-//            override fun onPlaceSelected(place: Place) {
-//                lat = place.latLng?.latitude!!
-//                long = place.latLng?.longitude!!
-//            }
-//
-//            override fun onError(status: Status) {
-//                Toast.makeText(appContext(), "An error occurred: " + status, Toast.LENGTH_LONG)
-//                    .show()
-//            }
-//        })
+        setListeners()
     }
 
     private fun initAttributes() {
         backButton = findViewById(R.id.back_btn)
 
+        location = findViewById(R.id.event_location_text)
         name = findViewById(R.id.event_name_text)
         description = findViewById(R.id.event_description_text)
         numberOfAttendees = findViewById(R.id.nr_attendees_text)
@@ -115,24 +98,6 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
         date.setOnClickListener(this)
         finishButton.setOnClickListener(this)
 
-        name.addTextChangedListener(object : EditTextWatcher() {
-            override fun afterTextChanged(s: Editable?) {
-                eventData.name = name.text.toString()
-            }
-        })
-
-        description.addTextChangedListener(object : EditTextWatcher() {
-            override fun afterTextChanged(s: Editable?) {
-                eventData.description = description.text.toString()
-            }
-        })
-
-        numberOfAttendees.addTextChangedListener(object : EditTextWatcher() {
-            override fun afterTextChanged(s: Editable?) {
-                eventData.numberOfAttendees = numberOfAttendees.text.toString().toInt()
-            }
-        })
-
         date.addTextChangedListener(object : EditTextWatcher() {
             override fun afterTextChanged(s: Editable?) {
                 calendar = date.text.toString()
@@ -141,6 +106,20 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
 
         startTime.setOnClickListener { setTime(startTime, true) }
         endTime.setOnClickListener { setTime(endTime, false) }
+    }
+
+    private fun initializeObservers() {
+        presenter.categories.observe(this,
+            Observer { categ ->
+                categ?.forEach { categoryList.add(it.name) }
+                initializeCategories()
+            })
+
+        presenter.ageRanges.observe(this,
+            Observer { range ->
+                range?.forEach { ages.add(it.ageMin.toString() + "-" + it.ageMax.toString()) }
+                initializeAgeRanges()
+            })
     }
 
     private fun setTime(editText: EditText, isStart: Boolean) {
@@ -161,20 +140,6 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
             }, hour, minute, true
         )
         timePicker.show()
-    }
-
-    private fun initializeObservers() {
-        presenter.categories.observe(this,
-            Observer { categ ->
-                categ?.forEach { categoryList.add(it.name) }
-                initializeCategories()
-            })
-
-        presenter.ageRanges.observe(this,
-            Observer { range ->
-                range?.forEach { ages.add(it.ageMin.toString() + "-" + it.ageMax.toString()) }
-                initializeAgeRanges()
-            })
     }
 
     private fun initializeCategories() {
@@ -222,27 +187,37 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat")
     override fun onClick(v: View?) {
         when (v?.id) {
 
             R.id.done_btn -> {
+                if(location.text.toString().isNotBlank())  {
+                    val list = gc.getFromLocationName(location.text.toString(), 1)
+                    val address: Address = list[0]
+                    lat = address.latitude
+                    long = address.longitude
+                }
+
                 eventData = Event(
                     name.text.toString(),
                     description.text.toString(),
-                    numberOfAttendees.text.toString().toInt(),
-                    category.selectedItem.toString(),
-//                    long!!,
-//                    lat!!,
-                    45.642109947940234,
-                    25.58921813997586,
-                    ageRange.selectedItem.toString().split("-")[0].toInt(),
-                    ageRange.selectedItem.toString().split("-")[1].toInt(),
-                    start!!,
-                    end!!
+                    if (numberOfAttendees.text.toString() != "") numberOfAttendees.text.toString().toInt() else 0,
+                    if(category.selectedItem != null) category.selectedItem.toString() else "",
+                    long,
+                    lat,
+                    if(ageRange.selectedItem != null) ageRange.selectedItem.toString().split("-")[0].toInt() else 0,
+                    if(ageRange.selectedItem != null) ageRange.selectedItem.toString().split("-")[1].toInt() else 0,
+                    start,
+                    end
                 )
-                presenter.addEvent(eventData, this)
-                navigateToHomeActivity(this)
+                if(!presenter.fieldsValidation(eventData, appContext())) {
+                    presenter.addEvent(eventData, this)
+                }
+                else {
+                    Toast.makeText(appContext(), R.string.invalid_data_add_event, Toast.LENGTH_LONG).show()
+                }
             }
 
             R.id.event_date_text -> {

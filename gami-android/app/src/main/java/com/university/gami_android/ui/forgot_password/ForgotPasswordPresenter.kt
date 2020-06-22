@@ -3,6 +3,7 @@ package com.university.gami_android.ui.forgot_password
 import android.content.Context
 import android.util.Patterns
 import android.view.View
+import com.university.gami_android.R
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
@@ -15,20 +16,29 @@ class ForgotPasswordPresenter : BasePresenter<ForgotPasswordContract.View>(), Fo
     private var userRepository: UserRepository =
         RetrofitClientInstance.retrofitInstance?.create(UserRepository::class.java)!!
 
-    override fun doForgotPassword(sendMail: SendMail, view: View, context: Context) {
+    override fun doForgotPassword(sendMail: SendMail, context: Context) {
         val call = userRepository.sendMail(sendMail)
 
         val request = HttpRequest(object :
-            NetworkCallback<Void> {
+            NetworkCallback<Boolean> {
 
-            override fun onSuccess(response: Void?) {
+            override fun onSuccess(response: Boolean?) {
                 if (isBound()) {
-                    getView()?.viewSnackbar()
+                    getView()?.changeProgressaBarVisibility(false)
+                    if(response == true) {
+                        getView()?.changeProgressaBarVisibility(true)
+                        getView()?.viewSnackbar()
+                    }
+                    else {
+                        getView()?.changeProgressaBarVisibility(true)
+                        getView()?.makeToast(getView()?.appContext()?.resources?.getString(R.string.invalid_email)!!, context)
+                    }
                 }
             }
 
             override fun onError(message: String?) {
                 if (isBound()) {
+                    getView()?.changeProgressaBarVisibility(true)
                     getView()?.makeToast(message!!, context)
                 }
             }

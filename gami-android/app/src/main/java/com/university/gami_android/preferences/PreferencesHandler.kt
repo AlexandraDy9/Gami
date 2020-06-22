@@ -3,7 +3,6 @@ package com.university.gami_android.preferences
 import android.content.Context
 import android.content.SharedPreferences
 import com.university.gami_android.GamiApplication
-import com.university.gami_android.preferences.PrefKeys
 
 class PreferenceHandler private constructor() {
     companion object {
@@ -16,7 +15,7 @@ class PreferenceHandler private constructor() {
             preferences.edit().putString(PrefKeys.PREF_EMAIL, userEmail).apply()
         }
 
-        fun getUserName() : String{
+        fun getUserName() : String {
             return preferences.getString(PrefKeys.PREF_USERNAME, "") ?: ""
         }
 

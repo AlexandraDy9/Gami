@@ -62,7 +62,6 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
     }
 
     override fun viewSnackbar() {
-        progressBar.visibility = View.INVISIBLE
         val snackbar = Snackbar.make(
             findViewById(android.R.id.content),
             R.string.sent_email,
@@ -86,7 +85,6 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
                 if (hasErrorForEmail()) {
                     presenter.doForgotPassword(
                         SendMail(email.text.toString()),
-                        findViewById(android.R.id.content),
                         appContext()
                     )
                     sendButton.isEnabled = false
@@ -94,6 +92,10 @@ class ForgotPasswordActivity : AppCompatActivity(), ForgotPasswordContract.View,
                 }
             }
         }
+    }
+
+    override fun changeProgressaBarVisibility(value: Boolean) {
+        progressBar.visibility = if (!value) View.VISIBLE else View.INVISIBLE
     }
 
     private fun hasErrorForEmail(): Boolean {

@@ -3,8 +3,8 @@ package com.university.gami_android.ui.events
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -39,6 +39,8 @@ class EventsActivity : AppCompatActivity() {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
         }
+
+        toolbar.setNavigationOnClickListener { finish() }
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener { startActivity(Intent(applicationContext, AddEventActivity::class.java)) }
     }
@@ -62,4 +64,17 @@ class EventsActivity : AppCompatActivity() {
         tabLayout.setupWithViewPager(viewPager)
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_bar, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search ->
+                return true
+        }
+        return false
+    }
 }

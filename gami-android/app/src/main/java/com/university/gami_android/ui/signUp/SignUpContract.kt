@@ -11,7 +11,8 @@ interface SignUpContract {
         fun hasErrorForEmail() : Boolean
         fun hasErrorForPassword() : Boolean
         fun hasErrorForConfirmPassword() : Boolean
-        fun navigateToMainActivity(context: Context)
+        fun navigateToLoginActivity(context: Context)
+        fun changeProgressaBarVisibility(value: Boolean)
     }
 
     interface Presenter {

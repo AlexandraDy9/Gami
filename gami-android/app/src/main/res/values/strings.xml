@@ -1,9 +1,10 @@
 <resources>
-    <string name="app_name">gami</string>
-    <string name="facebook_app_id">id</string>
-    <string name="fb_login_protocol_scheme">protocol scheme</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="app_name">Gami</string>
+    <string name="sign_up_new">New User? <font color='#008577'>Sign up!</font></string>
+    <string name="sign_up">Sign up!</string>
+    <string name="sign_up_success">Successfully create a new account!!</string>
     <string name="first_name">First name</string>
+    <string name="register">Register</string>
     <string name="last_name">Last name</string>
     <string name="username">Username</string>
     <string name="email">Email</string>
@@ -23,8 +24,10 @@
     <string name="select_hobbies">Please select your hobbies</string>
     <string name="done">Done</string>
     <string name="hobbies">Hobbies</string>
-    <string name="outdoor_category_title">Outdoor</string>
-    <string name="indoor_category_title">Indoor</string>
+    <string name="boardgames_category_title">Boardgames</string>
+    <string name="cardgames_category_title">Card Games</string>
+    <string name="dicegames_category_title">Dice Games</string>
+    <string name="view_all_events">View all events</string>
     <string name="drawer_open">Open drawer</string>
     <string name="drawer_close">Close drawer</string>
     <string name="event_list_tab_title">List</string>
@@ -40,7 +43,7 @@
     <string name="failed_action">Something went wrong! Try again later</string>
     <string name="login_failed">Invalid username or password! Try again</string>
     <string name="isHosted">Hosted by </string>
-    <string name="attendees">Number of attendees</string>
+    <string name="attendees">Number of attendees:</string>
     <string name="join">Join</string>
     <string name="ratings_reviews">Ratings and reviews</string>
     <string name="write_review">Write a review</string>
@@ -51,6 +54,7 @@
     <string name="review_description">Describe your experience</string>
     <string name="review_error">Review too long</string>
     <string name="join_message">Successfully joined</string>
+    <string name="left_message">Successfully left</string>
     <string name="already_join_message">You are already joined</string>
     <string name="attendees_full_message">Full</string>
     <string name="post_review">Successfully uploaded the review</string>
@@ -61,7 +65,8 @@
     <string name="remove_events_string">Are you sure that you want to remove this event?</string>
     <string name="success_remove">Removed successfully!</string>
     <string name="source_date_format">yyyy-MM-dd\'T\'HH:mm:ss</string>
-    <string name="result_date_format">HH:mm dd/MM/yyyy</string>
+    <string name="result_date_format">HH:mm</string>
+    <string name="event_location">13 Republicii or Cafe 13* Brasov* RO</string>
     <string name="hosted_events">Hosted events</string>
     <string name="event_name">Event Name</string>
     <string name="nr_of_attendees">Attendees</string>
@@ -74,7 +79,25 @@
     <string name="no_category">Please select a category.</string>
     <string name="no_age_range">Please select an age range.</string>
     <string name="add_event">Create event</string>
-    <string name="places">your id</string>
+    <string name="add_event_success">Successfully created a new event!!</string>
+    <string name="date_time_error">Start time must be before end time and after today</string>
     <string name="edit_successfully">"Saved changes!"</string>
     <string name="empty">There are no events here</string>
+    <string name="menu_favorites">Favorites</string>
+    <string name="menu_joined_events">Joined events</string>
+    <string name="menu_logout">Logout</string>
+    <string name="joined_users">Joined users</string>
+    <string name="left_event">Left</string>
+    <string name="no_joined_users">You have no joined users yet.</string>
+    <string name="cannot_join">You cannot join at this event</string>
+
+    <string name="places">AIzaSyAkjegQKaeRF8HEHLVCn_tW8XgjQBSUrw8</string>
+    <string name="facebook_app_id">607868226742144</string>
+    <string name="fb_login_protocol_scheme">fb607868226742144</string>
+    <string name="search">Search</string>
+    <string name="invalid_data_signup">Invalid data for sign up</string>
+    <string name="invalid_data_add_event">Invalid data for creating a new event</string>
+    <string name="invalid_email">Invalid email</string>
+    <string name="timedisplay">Time:</string>
+    <string name="arrow">-</string>
 </resources>

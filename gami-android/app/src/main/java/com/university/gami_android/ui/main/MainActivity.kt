@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Configuration
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Bundle
 import androidx.core.view.GravityCompat
 import android.view.*
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -30,8 +30,6 @@ import com.university.gami_android.ui.joined_events.JoinedEventsActivity
 import com.university.gami_android.ui.login.LoginActivity
 import com.university.gami_android.ui.profile.ProfileActivity
 import com.university.gami_android.util.getNavigationBarSize
-import com.university.gami_android.util.load
-
 
 class MainActivity : AppCompatActivity(), MainContract.View,
     NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -42,6 +40,12 @@ class MainActivity : AppCompatActivity(), MainContract.View,
     private var userPhotos: List<Photo> = arrayListOf()
     private var storagePermission: Boolean = false
 
+    private lateinit var userIcon: ImageView
+
+    override fun onResume() {
+        super.onResume()
+        presenter?.getPhotos(appContext())
+    }
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +54,7 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         presenter = MainPresenter()
         presenter?.bindView(this)
 
-        getLocationPermission()
+        getStoragePermission()
 
         val toolbar: Toolbar = findViewById(R.id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -72,12 +76,11 @@ class MainActivity : AppCompatActivity(), MainContract.View,
 
         val menuNavView = findViewById<NavigationView>(R.id.nav_view)
         menuNavView.setNavigationItemSelectedListener(this)
-        loadImages()
 
         val header: View = findViewById<NavigationView>(R.id.nav_view).getHeaderView(0)
         header.findViewById<TextView>(R.id.header_text_view).text = PreferenceHandler.getUserName()
 
-        val userIcon = header.findViewById<ImageView>(R.id.sidebar_profile_picture)
+        userIcon = header.findViewById(R.id.sidebar_profile_picture)
         userIcon.setOnClickListener(this)
 
         presenter?.getPhotos(appContext())
@@ -91,6 +94,8 @@ class MainActivity : AppCompatActivity(), MainContract.View,
                 }
             }
         })
+
+        loadCategories()
     }
 
     override fun onClick(v: View?) {
@@ -116,22 +121,8 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         return true
     }
 
-    override fun onBackPressed() {
-        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
-            drawer?.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration?) {
-        super.onConfigurationChanged(newConfig!!)
-        finish()
-        startActivity(intent)
-    }
-
     @RequiresApi(Build.VERSION_CODES.M)
-    private fun getLocationPermission() {
+    private fun getStoragePermission() {
         if (ContextCompat
                 .checkSelfPermission(
                     appContext(),
@@ -147,6 +138,28 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         }
     }
 
+    private fun loadCategories() {
+        val boardgamesActivity: ImageView = findViewById(R.id.boardgames_activity)
+        boardgamesActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Boardgames"))
+        }
+
+        val cardgamesActivity: ImageView = findViewById(R.id.cardgames_activity)
+        cardgamesActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Card Games"))
+        }
+
+        val dicegamesActivity: ImageView = findViewById(R.id.dicegames_activity)
+        dicegamesActivity.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Dice Games"))
+        }
+
+        val allEvents: TextView = findViewById(R.id.view_all_events)
+        allEvents.setOnClickListener {
+            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "ALL"))
+        }
+    }
+
     override fun appContext(): Context = applicationContext
 
     override fun navigateToLoginActivity(context: Context) {
@@ -158,31 +171,18 @@ class MainActivity : AppCompatActivity(), MainContract.View,
         startActivity(Intent(this, ProfileActivity::class.java))
     }
 
-    private fun loadImages() {
-        val catanActivity: ImageView = findViewById(R.id.catan_activity)
-        catanActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Catan"))
+    override fun onBackPressed() {
+        if (drawer!!.isDrawerOpen(GravityCompat.START)) {
+            drawer?.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
         }
+    }
 
-        val carcassoneActivity: ImageView = findViewById(R.id.carcassone_activity)
-        carcassoneActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Carcassone"))
-        }
-
-        val ligrettoActivity: ImageView = findViewById(R.id.ligretto_activity)
-        ligrettoActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Ligretto"))
-        }
-
-        val mysteriumActivity: ImageView = findViewById(R.id.mysterium_activity)
-        mysteriumActivity.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "Mysterium"))
-        }
-
-        val allEvents: TextView = findViewById(R.id.view_all_events)
-        allEvents.setOnClickListener {
-            startActivity(Intent(this, EventsActivity::class.java).putExtra("type", "ALL"))
-        }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        finish()
+        startActivity(intent)
     }
 
     override fun onDestroy() {

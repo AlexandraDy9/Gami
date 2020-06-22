@@ -7,15 +7,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.university.gami_android.R
 import com.university.gami_android.model.SignUpDao
 import com.university.gami_android.model.User
-import com.university.gami_android.ui.main.MainActivity
+import com.university.gami_android.ui.login.LoginActivity
 import com.university.gami_android.util.EditTextWatcher
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,6 +27,7 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
     private lateinit var firstName: EditText
     private lateinit var lastName: EditText
     private lateinit var userName: EditText
+    private lateinit var progressBar: RelativeLayout
 
     private lateinit var signUp: Button
     private lateinit var back: TextView
@@ -76,6 +75,8 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
 
         signUp = findViewById(R.id.signUp_btn)
         back = findViewById(R.id.back_btn)
+
+        progressBar = findViewById(R.id.progress_bar)
     }
 
     private fun setListeners() {
@@ -126,6 +127,8 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
                     hasErrorForPassword() &&
                     hasErrorForConfirmPassword()) {
 
+                    progressBar.visibility = View.VISIBLE
+
                     presenter.doSignUp(
                         User(
                         signUpData.userName,
@@ -140,9 +143,14 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
         }
     }
 
-    override fun navigateToMainActivity(context: Context) {
+    override fun changeProgressaBarVisibility(value: Boolean) {
+        progressBar.visibility = if (!value) View.VISIBLE else View.INVISIBLE
+    }
+
+    override fun navigateToLoginActivity(context: Context) {
+        Toast.makeText(appContext(), appContext().getString(R.string.sign_up_success), Toast.LENGTH_LONG).show()
         finish()
-        startActivity(Intent(context, MainActivity::class.java))
+        startActivity(Intent(context, LoginActivity::class.java))
     }
 
     fun validateInputs() {

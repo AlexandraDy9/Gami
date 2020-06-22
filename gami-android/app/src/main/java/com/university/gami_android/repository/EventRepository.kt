@@ -1,7 +1,6 @@
 package com.university.gami_android.repository
 
 import com.university.gami_android.model.*
-import com.university.gami_android.model.ReviewDao
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -12,6 +11,9 @@ interface EventRepository {
 
     @GET("event/")
     fun getEvents(@Header("Authorization") auth: String): Call<List<Event>>
+
+    @GET("event/joinedUsers/{name}")
+    fun getAllJoinedUsers(@Header("Authorization") auth: String, @Path(value = "name") name: String): Call<List<User>>
 
     @PATCH("event/{name}/review")
     fun saveReview(@Header("Authorization") auth: String, @Path(value = "name") name: String, @Body sendReview: SendReview) : Call<Void>
@@ -33,7 +35,4 @@ interface EventRepository {
 
     @GET("event/{name}/host")
     fun getHost(@Header("Authorization") auth: String, @Path(value = "name") name: String) : Call<Host>
-
-    @GET("event/{name}/joinedUsers")
-    fun getNumberOfJoinedUsers(@Header("Authorization") auth: String, @Path(value = "name") name: String) : Call<Int>
 }

@@ -7,10 +7,11 @@ import com.university.gami_android.ui.base.BaseContract
 class ForgotPasswordContract {
     interface View : BaseContract.View {
         fun viewSnackbar()
+        fun changeProgressaBarVisibility(value: Boolean)
     }
 
     interface Presenter {
         fun emailValidation(email: String): Boolean
-        fun doForgotPassword(sendMail: SendMail, view: android.view.View, context: Context)
+        fun doForgotPassword(sendMail: SendMail, context: Context)
     }
 }

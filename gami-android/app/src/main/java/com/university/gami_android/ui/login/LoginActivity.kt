@@ -30,7 +30,6 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     private lateinit var loginBtn: Button
     private lateinit var signUp: TextView
     private lateinit var forgotPass: TextView
-    private lateinit var fbLogin: LoginButton
     private lateinit var callbackManager: CallbackManager
     private lateinit var progressBar: RelativeLayout
 
@@ -51,38 +50,25 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         initAttributes()
         validateInputs()
         setListeners()
-        fbLoginInit()
     }
 
     private fun initAttributes() {
         username = findViewById(R.id.username_text)
-        username.addTextChangedListener(textWatcher)
         password = findViewById(R.id.password_text)
-        password.addTextChangedListener(textWatcher)
 
         loginBtn = findViewById(R.id.login_button)
         signUp = findViewById(R.id.sign_up)
         forgotPass = findViewById(R.id.forgot_pass)
+
         progressBar = findViewById(R.id.progress_bar_login)
     }
 
     private fun setListeners() {
+        username.addTextChangedListener(textWatcher)
+        password.addTextChangedListener(textWatcher)
         loginBtn.setOnClickListener(this)
         signUp.setOnClickListener(this)
         forgotPass.setOnClickListener(this)
-    }
-
-    private fun fbLoginInit() {
-        fbLogin = findViewById(R.id.fb_login)
-        fbLogin.setReadPermissions(Arrays.asList("email", "public_profile", "user_birthday"))
-
-        callbackManager = CallbackManager.Factory.create()
-        fbLogin.registerCallback(callbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {}
-                override fun onCancel() {}
-                override fun onError(exception: FacebookException) {}
-            })
     }
 
     fun validateInputs() {
@@ -102,6 +88,7 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
     override fun onClick(p0: View?) {
         when (p0?.id) {
             R.id.login_button -> {
+                progressBar.visibility = View.VISIBLE
                 presenter.doLogin(loginData, appContext())
             }
 
@@ -122,23 +109,16 @@ class LoginActivity : AppCompatActivity(), LoginContract.View, View.OnClickListe
         )
     }
 
+    override fun changeProgressaBarVisibility(value: Boolean) {
+        progressBar.visibility = if (!value) View.VISIBLE else View.INVISIBLE
+    }
+
     override fun navigateToSignUpActivity(context: Context) {
         startActivity(Intent(context, SignUpActivity::class.java))
     }
 
     override fun navigateToForgotPasswordActivity(context: Context) {
         startActivity(Intent(context, ForgotPasswordActivity::class.java))
-    }
-
-    var tokenTracker: AccessTokenTracker = object : AccessTokenTracker() {
-        override fun onCurrentAccessTokenChanged(oldAccessToken: AccessToken?, currentAccessToken: AccessToken?) {
-            if (currentAccessToken == null) {
-                makeToast("Not logged in", appContext())
-            } else {
-                presenter.doFacebookLogin(currentAccessToken, appContext())
-                progressBar.visibility = View.VISIBLE
-            }
-        }
     }
 
     override fun appContext(): Context {

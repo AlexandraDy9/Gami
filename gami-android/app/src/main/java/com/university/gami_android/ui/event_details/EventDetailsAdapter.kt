@@ -12,6 +12,7 @@ import com.university.gami_android.R
 import com.university.gami_android.model.Event
 import com.university.gami_android.model.Host
 import com.university.gami_android.model.ReviewDao
+import com.university.gami_android.model.User
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.util.formatOnlyDate
 import com.university.gami_android.util.formatOnlyHour
@@ -24,7 +25,7 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
     private var listReviewDao: List<ReviewDao> = arrayListOf()
     private var event: Event? = null
     private var host: Host? = null
-    private var numberJoinedUsers: Int = 0
+    private var joinedUsers: List<User> = arrayListOf()
 
     fun setReviewList(listReviewDao: List<ReviewDao>) {
         this.listReviewDao = listReviewDao
@@ -36,8 +37,8 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
         notifyDataSetChanged()
     }
 
-    fun setJoinedUsers(numberJoinedUsers: Int) {
-        this.numberJoinedUsers = numberJoinedUsers
+    fun setJoinedUsers(joinedUsers: List<User>) {
+        this.joinedUsers = joinedUsers
         notifyDataSetChanged()
     }
 
@@ -118,12 +119,34 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
             host?.let { host ->
                 if (host.name == PreferenceHandler.getUserName()) {
                     joinBtn.apply {
-                        isEnabled = false
-                        joinBtn.setTextColor(itemView.resources.getColor(R.color.unavailable_color))
+                        text = itemView.resources?.getString(R.string.joined_users)!!
+                        setOnClickListener {
+                            itemClickListener.onJoinedUsersClick()
+                        }
                     }
+
                     writeBtn.apply {
                         isEnabled = false
                         setTextColor(itemView.resources.getColor(R.color.unavailable_color))
+                    }
+                }
+
+                else {
+                    if(joinedUsers.any{it.user == PreferenceHandler.getUserName()}) {
+                        joinBtn.apply {
+                            text = itemView.resources?.getString(R.string.left_event)!!
+                            setOnClickListener {
+                                itemClickListener.onLeftClick(event!!)
+                            }
+                        }
+                    }
+                    else {
+                        joinBtn.apply {
+                            text = itemView.resources?.getString(R.string.join)!!
+                            setOnClickListener {
+                                itemClickListener.onJoinClick(event!!)
+                            }
+                        }
                     }
                 }
 
@@ -157,21 +180,13 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
 
                 attendees.max = event.numberOfAttendees
 
-                attendees.progress = numberJoinedUsers
+                attendees.progress = joinedUsers.size
                 numberOfAttendees.text =
-                    String.format(" %s / %s", numberJoinedUsers.toString(), event.numberOfAttendees)
+                    String.format(" %s / %s", joinedUsers.size.toString(), event.numberOfAttendees)
 
                 if (attendees.progress == event.numberOfAttendees)
                     numberOfAttendees.text =
                         itemView.resources.getString(R.string.attendees_full_message)
-            }
-
-            joinBtn.setOnClickListener {
-                itemClickListener.onJoinClick()
-                joinBtn.apply {
-                    isEnabled = false
-                    joinBtn.setTextColor(itemView.resources.getColor(R.color.unavailable_color))
-                }
             }
 
             writeBtn.setOnClickListener {
@@ -214,7 +229,9 @@ class EventDetailsAdapter(val itemClickListener: ItemClickListener) :
 
     interface ItemClickListener {
         fun onWriteReviewClick()
-        fun onJoinClick()
+        fun onJoinClick(event: Event)
+        fun onLeftClick(event: Event)
+        fun onJoinedUsersClick()
         fun onHostNameClick(hostName: String)
     }
 }

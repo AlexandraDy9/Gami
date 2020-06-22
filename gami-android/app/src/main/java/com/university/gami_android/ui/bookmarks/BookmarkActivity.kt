@@ -4,12 +4,16 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ImageView
+import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.university.gami_android.R
@@ -23,9 +27,8 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
 
     private lateinit var presenter: BookmarkPresenter
     private lateinit var events: ArrayList<Event>
-    private lateinit var adapterJoined: JoinedEventAdapter
+    private lateinit var adapterFavorites: JoinedEventAdapter
     private lateinit var recyclerView: RecyclerView
-    private lateinit var backButton: ImageView
     private lateinit var progressBar: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,8 +38,16 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
         presenter = BookmarkPresenter()
         presenter.bindView(this)
 
-        backButton = findViewById(R.id.back_btn_favorites)
-        backButton.setOnClickListener { navigateToMainActivity(appContext()) }
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar_favorite_events)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
+        toolbar.setNavigationOnClickListener { finish() }
 
         setupRecycler()
     }
@@ -44,14 +55,15 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
     private fun setupRecycler() {
         events = ArrayList()
 
-        adapterJoined = JoinedEventAdapter(this)
-        adapterJoined.setEventsList(events)
+        adapterFavorites = JoinedEventAdapter(this)
+        adapterFavorites.setEventsList(events)
+        adapterFavorites.setModifiedEventsList(events)
 
         recyclerView = findViewById(R.id.favorites_list)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(appContext())
-            adapter = adapterJoined
+            adapter = adapterFavorites
             setPadding(0, 0, 0, getNavigationBarSize(resources))
         }
 
@@ -69,7 +81,8 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
         val textView: TextView = findViewById(R.id.no_favorite_events)
         textView.goneUnless(events?.isEmpty()!!)
         recyclerView.goneUnless(events.isNotEmpty())
-        adapterJoined.setEventsList(events)
+        adapterFavorites.setEventsList(events)
+        adapterFavorites.setModifiedEventsList(events)
         progressBar.visibility = View.INVISIBLE
     }
 
@@ -87,8 +100,8 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
         alertDialog.setMessage(getString(R.string.remove_events_string))
         alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK") { _, _ ->
             presenter.removeBookmark(appContext(), event)
-            adapterJoined.removeEvent(event)
-            if (adapterJoined.itemCount == 0) {
+            adapterFavorites.removeEvent(event)
+            if (adapterFavorites.itemCount == 0) {
                 val textView: TextView = findViewById(R.id.no_favorite_events)
                 textView.visibility = View.VISIBLE
                 recyclerView.visibility = View.GONE
@@ -96,6 +109,34 @@ class BookmarkActivity : AppCompatActivity(), BookmarkContract.View, JoinedEvent
         }
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel") { _, _ -> }
         alertDialog.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_bar, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+
+        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapterFavorites.filter.filter(newText)
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search ->
+                return true
+        }
+        return false
     }
 
     override fun onDestroy() {

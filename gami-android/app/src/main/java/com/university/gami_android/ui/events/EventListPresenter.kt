@@ -9,6 +9,7 @@ import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.EventRepository
 import com.university.gami_android.repository.UserRepository
 import com.university.gami_android.ui.base.BasePresenter
+import retrofit2.Call
 
 
 class EventListPresenter : BasePresenter<EventListContract.View>(), EventListContract.Presenter {
@@ -28,6 +29,7 @@ class EventListPresenter : BasePresenter<EventListContract.View>(), EventListCon
             override fun onSuccess(response: List<Event>?) {
                 if (isBound()) {
                     getView()?.updateBookmarkedEventsList(response)
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -40,8 +42,12 @@ class EventListPresenter : BasePresenter<EventListContract.View>(), EventListCon
         request.execute(call)
     }
 
-    override fun getEventsByCategory(context: Context, game: String) {
-        val call = eventRepository.getEventsByCategory(PreferenceHandler.getAuthorization(), game)
+    override fun getEvents(context: Context, game: String) {
+        val call = if(game == "") {
+            eventRepository.getEvents(PreferenceHandler.getAuthorization())
+        } else {
+            eventRepository.getEventsByCategory(PreferenceHandler.getAuthorization(), game)
+        }
 
         val request = HttpRequest(object :
             NetworkCallback<List<Event>> {
@@ -49,27 +55,7 @@ class EventListPresenter : BasePresenter<EventListContract.View>(), EventListCon
             override fun onSuccess(response: List<Event>?) {
                 if (isBound()) {
                     getView()?.updateEventList(response)
-                }
-            }
-
-            override fun onError(message: String?) {
-                if (isBound()) {
-                    getView()?.makeToast(message!!, context)
-                }
-            }
-        })
-        request.execute(call)
-    }
-
-    override fun getEvents(context: Context) {
-        val call = eventRepository.getEvents(PreferenceHandler.getAuthorization())
-
-        val request = HttpRequest(object :
-            NetworkCallback<List<Event>> {
-
-            override fun onSuccess(response: List<Event>?) {
-                if (isBound()) {
-                    getView()?.updateEventList(response)
+                    getView()?.progressBarVisibility()
                 }
             }
 

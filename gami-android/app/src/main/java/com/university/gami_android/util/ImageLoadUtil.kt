@@ -2,8 +2,6 @@ package com.university.gami_android.util
 
 import android.content.Context
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
-import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 
 

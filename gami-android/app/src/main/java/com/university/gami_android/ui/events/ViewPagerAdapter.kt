@@ -7,7 +7,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 class ViewPagerAdapter(val type: String, fm: FragmentManager, private var tabNames: List<String>) :
     FragmentPagerAdapter(fm) {
 
-    override fun getItem(position: Int): Fragment? {
+    override fun getItem(position: Int): Fragment {
         when (position) {
             0 -> {
                 val eventListFragment = EventListFragment()

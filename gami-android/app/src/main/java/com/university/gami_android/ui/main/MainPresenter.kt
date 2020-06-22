@@ -5,14 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
+import com.university.gami_android.model.Category
 import com.university.gami_android.model.Photo
 import com.university.gami_android.preferences.PreferenceHandler
+import com.university.gami_android.repository.EventRepository
 import com.university.gami_android.repository.UserRepository
 import com.university.gami_android.ui.base.BasePresenter
 
 class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter {
     private var userRepository: UserRepository = RetrofitClientInstance.retrofitInstance?.create(
         UserRepository::class.java)!!
+
+    var userPhotos = MutableLiveData<List<Photo>>()
 
     override fun doLogout(context: Context) {
         val call = userRepository.logout()
@@ -38,8 +42,6 @@ class MainPresenter : BasePresenter<MainContract.View>(), MainContract.Presenter
         })
         request.execute(call)
     }
-
-    var userPhotos = MutableLiveData<List<Photo>>()
 
     override fun getPhotos(context: Context) {
         val call = userRepository.getPhotosByUser(

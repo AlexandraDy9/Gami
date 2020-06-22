@@ -2,6 +2,7 @@ package com.university.gami_android.ui.signUp
 
 import android.content.Context
 import android.util.Patterns
+import com.university.gami_android.R
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
 import com.university.gami_android.connection.RetrofitClientInstance
@@ -17,7 +18,7 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
         RetrofitClientInstance.retrofitInstance?.create(UserRepository::class.java)!!
 
     override fun doSignUp(user: User, context: Context) {
-        val call = userRepository.saveUser(user)
+        val call = userRepository.saveUser(PreferenceHandler.getAuthorization(), user)
 
         val request = HttpRequest(object :
             NetworkCallback<User> {
@@ -28,13 +29,15 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
                     PreferenceHandler.setUserFirstName(response.firstname)
                     PreferenceHandler.setUserEmail(response.email)
                     PreferenceHandler.setUserName(response.user)
-                    getView()?.navigateToMainActivity(context)
+                    getView()?.changeProgressaBarVisibility(false)
+                    getView()?.navigateToLoginActivity(context)
                 }
             }
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.changeProgressaBarVisibility(true)
+                    getView()?.makeToast(getView()?.appContext()?.resources?.getString(R.string.invalid_data_signup)!!, context)
                 }
             }
         })

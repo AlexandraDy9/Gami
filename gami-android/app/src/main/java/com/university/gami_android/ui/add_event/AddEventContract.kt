@@ -13,5 +13,7 @@ interface AddEventContract {
         fun addEvent(event: Event, context: Context)
         fun getCategories(context: Context)
         fun getAgeRanges(context: Context)
+        fun fieldsValidation(event: Event, context: Context): Boolean
+        fun dateTimeValidation(startTime: String, endTime: String, context: Context): Boolean
     }
 }

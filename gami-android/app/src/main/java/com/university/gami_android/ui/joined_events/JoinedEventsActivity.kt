@@ -4,12 +4,17 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.university.gami_android.R
@@ -24,16 +29,25 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
     private lateinit var events: ArrayList<Event>
     private lateinit var adapterJoined: JoinedEventAdapter
     private lateinit var listview: RecyclerView
-    private lateinit var backButton: ImageView
     private lateinit var progressBar: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_joined_events)
-        backButton = findViewById(R.id.back_btn_join)
-        backButton.setOnClickListener { navigateToMainActivity(appContext()) }
+
         presenter = JoinedEventsPresenter()
         presenter.bindView(this)
+
+        val toolbar: Toolbar = findViewById(R.id.toolbar_joined_events)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
+        toolbar.setNavigationOnClickListener { finish() }
+
         setupRecycler()
     }
 
@@ -41,6 +55,7 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
         events = ArrayList()
         adapterJoined = JoinedEventAdapter(this)
         adapterJoined.setEventsList(events)
+        adapterJoined.setModifiedEventsList(events)
         listview = findViewById(R.id.joined_list)
 
         listview.apply {
@@ -63,6 +78,7 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
         textView.goneUnless(events?.isEmpty()!!)
         listview.goneUnless(events.isNotEmpty())
         adapterJoined.setEventsList(events)
+        adapterJoined.setModifiedEventsList(events)
         progressBar.visibility = View.INVISIBLE
     }
 
@@ -89,6 +105,34 @@ class JoinedEventsActivity : AppCompatActivity(), JoinedEventsContract.View, Joi
         }
         alertDialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel") { _, _ -> }
         alertDialog.show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_bar, menu)
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+
+        searchView.imeOptions = EditorInfo.IME_ACTION_DONE
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                adapterJoined.filter.filter(newText)
+                return false
+            }
+        })
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_search ->
+                return true
+        }
+        return false
     }
 
     override fun onDestroy() {

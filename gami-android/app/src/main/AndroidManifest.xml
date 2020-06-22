@@ -26,10 +26,6 @@
         tools:ignore="GoogleAppIndexingWarning"
         tools:targetApi="m">
 
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
-
         <activity
             android:name=".ui.splash.SplashActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -55,15 +51,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ui.hobby_selection.HobbySelectionActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name" />
-
-        <activity
             android:name=".ui.events.EventsActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
@@ -84,19 +71,6 @@
             android:required="false" />
 
         <activity
-            android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data android:scheme="@string/fb_login_protocol_scheme" />
-            </intent-filter>
-        </activity>
-
-        <activity
             android:name=".ui.forgot_password.ForgotPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -110,14 +84,26 @@
 
                 <data
                     android:scheme="https"
-                    android:host="www.hobi.com"
+                    android:host="www.gami.com"
                     android:pathPrefix="/resetpassword" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.event_details.EventDetailsActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="www.gami.com"
+                    android:pathPrefix="/event" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".ui.write_review.WriteReviewActivity"
@@ -125,6 +111,10 @@
 
         <activity
             android:name=".ui.joined_events.JoinedEventsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ui.joined_users.JoinedUsersActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

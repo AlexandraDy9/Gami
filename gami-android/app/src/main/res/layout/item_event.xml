@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="6dp"
                     android:fontFamily="@font/lato_regular"
-                    android:text="Time: "
+                    android:text="@string/timedisplay"
                     android:textSize="12sp" />
 
                 <TextView
@@ -68,7 +68,7 @@
                     android:layout_marginLeft="6dp"
                     android:layout_marginRight="6dp"
                     android:fontFamily="@font/lato_regular"
-                    android:text="-"
+                    android:text="@string/arrow"
                     android:textSize="12sp" />
 
                 <TextView
@@ -85,11 +85,23 @@
             android:id="@+id/bookmark_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
+            android:layout_marginEnd="45dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:clickable="true"
             android:src="@drawable/ic_bookmark"
             android:tint="@color/yellow"
+            android:focusable="true" />
+
+        <ImageView
+            android:id="@+id/share_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:clickable="true"
+            android:src="@drawable/ic_share_24px"
+            android:tint="@color/design_default_color_primary_dark"
             android:focusable="true" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

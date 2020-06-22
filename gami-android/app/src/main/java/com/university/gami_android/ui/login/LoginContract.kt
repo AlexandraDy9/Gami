@@ -10,6 +10,7 @@ interface LoginContract {
         fun navigateToMainActivity(context: Context)
         fun navigateToSignUpActivity(context: Context)
         fun navigateToForgotPasswordActivity(context: Context)
+        fun changeProgressaBarVisibility(value: Boolean)
     }
 
     interface Presenter {

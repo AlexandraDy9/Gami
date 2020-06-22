@@ -6,8 +6,8 @@
         tools:context=".ui.events.EventListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/event_list"
-            android:layout_width="match_parent"
+        android:id="@+id/event_list"
+        android:layout_width="match_parent"
         android:layout_height="match_parent" />
     <TextView
         android:id="@+id/empty_view_list"
@@ -17,4 +17,21 @@
         android:fontFamily="@font/lato_medium"
         android:visibility="gone"
         android:text="@string/empty" />
+
+    <RelativeLayout
+        android:id="@+id/progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_translucent_black"
+        android:fitsSystemWindows="true"
+        android:visibility="invisible">
+
+        <ProgressBar
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorPrimary" />
+
+    </RelativeLayout>
 </FrameLayout>

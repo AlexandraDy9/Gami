@@ -31,6 +31,7 @@ class ProfilePreviewPresenter : BasePresenter<ProfilePreviewContract.View>(),
             override fun onSuccess(response: User?) {
                 if (isBound()) {
                     userDetails.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -52,6 +53,7 @@ class ProfilePreviewPresenter : BasePresenter<ProfilePreviewContract.View>(),
             override fun onSuccess(response: List<Photo>?) {
                 if (isBound()) {
                     userPhotos.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -73,6 +75,7 @@ class ProfilePreviewPresenter : BasePresenter<ProfilePreviewContract.View>(),
             override fun onSuccess(response: List<Event>?) {
                 if (isBound()) {
                     hostedEvents.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 

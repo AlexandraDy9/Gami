@@ -9,6 +9,7 @@ import com.university.gami_android.connection.RetrofitClientInstance
 import com.university.gami_android.model.Event
 import com.university.gami_android.model.Host
 import com.university.gami_android.model.ReviewDao
+import com.university.gami_android.model.User
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.EventRepository
 import com.university.gami_android.repository.UserRepository
@@ -25,7 +26,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
     var event = MutableLiveData<Event>()
     var host = MutableLiveData<Host>()
-    var numberJoinedUsers = MutableLiveData<Int>()
+    var joinedUsers = MutableLiveData<List<User>>()
     var reviews = MutableLiveData<List<ReviewDao>>()
 
     override fun joinEvent(eventName: String, context: Context) {
@@ -59,6 +60,30 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
         request.execute(call)
     }
 
+
+    override fun leftEvent(eventName: String, context: Context) {
+        val call = userRepository.leftEvent(PreferenceHandler.getAuthorization(), eventName)
+
+        val request = HttpRequest(object :
+            NetworkCallback<Void> {
+
+            override fun onSuccess(response: Void?) {
+                if (isBound()) {
+                    getView()?.makeToast(
+                            getView()?.appContext()?.resources?.getString(R.string.left_message)!!,
+                            context)
+                }
+            }
+
+            override fun onError(message: String?) {
+                if (isBound()) {
+                    getView()?.makeToast(message!!, context)
+                }
+            }
+        })
+        request.execute(call)
+    }
+
     override fun getReviews(eventName: String, context: Context) {
         val call = eventRepository.getReviews(PreferenceHandler.getAuthorization(), eventName)
 
@@ -68,6 +93,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
             override fun onSuccess(response: List<ReviewDao>?) {
                 if (isBound()) {
                     reviews.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -89,6 +115,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
             override fun onSuccess(response: Event?) {
                 if (isBound()) {
                     event.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -110,6 +137,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
             override fun onSuccess(response: Host?) {
                 if (isBound()) {
                     host.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -122,15 +150,16 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
         request.execute(call)
     }
 
-    override fun getNumberOfJoinedUsers(eventName: String, context: Context) {
-        val call = eventRepository.getNumberOfJoinedUsers(PreferenceHandler.getAuthorization(), eventName)
+    override fun getJoinedUsers(eventName: String, context: Context) {
+        val call = eventRepository.getAllJoinedUsers(PreferenceHandler.getAuthorization(), eventName)
 
         val request = HttpRequest(object :
-            NetworkCallback<Int> {
+            NetworkCallback<List<User>> {
 
-            override fun onSuccess(response: Int?) {
+            override fun onSuccess(response: List<User>?) {
                 if (isBound()) {
-                    numberJoinedUsers.value = response
+                    joinedUsers.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 

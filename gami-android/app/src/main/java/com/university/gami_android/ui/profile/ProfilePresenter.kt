@@ -28,6 +28,7 @@ class ProfilePresenter : BasePresenter<ProfileContract.View>(), ProfileContract.
             override fun onSuccess(response: User?) {
                 if (isBound()) {
                     userDetails.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 
@@ -52,6 +53,7 @@ class ProfilePresenter : BasePresenter<ProfileContract.View>(), ProfileContract.
             override fun onSuccess(response: List<Photo>?) {
                 if (isBound()) {
                     userPhotos.value = response
+                    getView()?.progressBarVisibility()
                 }
             }
 

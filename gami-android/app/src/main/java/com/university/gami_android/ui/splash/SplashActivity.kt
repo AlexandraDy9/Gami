@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.university.gami_android.R
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.ui.login.LoginActivity
-import pl.bclogic.pulsator4droid.library.PulsatorLayout
 import com.university.gami_android.ui.main.MainActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -29,6 +28,6 @@ class SplashActivity : AppCompatActivity() {
             }
             finish()
         }
-        handler.postDelayed(runnable, 2000)
+        handler.postDelayed(runnable, 4000)
     }
 }

@@ -76,7 +76,7 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback, 
                 MarkerOptions()
                     .position(LatLng(it.latitude, it.longitude))
                     .title(it.name)
-                    .snippet( if(it.description.length > 10) it.description.take(10) + "..." else it.description )
+                    .snippet( if(it.description.length > 30) it.description.take(30) + "..." else it.description )
                     .icon(BitmapDescriptorFactory.fromBitmap(mergedBitmap))
             )
         }
@@ -109,7 +109,7 @@ class EventMapFragment : Fragment(), EventMapContract.View, OnMapReadyCallback, 
         }
     }
 
-    override fun onAttach(context: Context?) {
+    override fun onAttach(context: Context) {
         super.onAttach(context)
         parentContext = context
     }

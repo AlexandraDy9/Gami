@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/background_light"
-            android:elevation="4dp"
-            app:menu="@menu/search_bar"/>
+            android:elevation="4dp">
+        </androidx.appcompat.widget.Toolbar>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -29,7 +29,7 @@
                 android:id="@+id/first_category"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="5dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/rounded_fragment"
                 app:layout_constraintBottom_toTopOf="@id/second_category"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -37,24 +37,28 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/catan_activity"
+                    android:id="@+id/boardgames_activity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.80"
                     android:background="@drawable/rounded_fragment"
-                    android:paddingBottom="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/catan" />
+                    android:src="@drawable/boardgames"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_shadow"/>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="230dp"
                     android:fontFamily="@font/lato"
                     android:gravity="center"
-                    android:text="@string/catan_category_title"
-                    android:textColor="@android:color/white"
-                    android:textSize="60sp">
-
+                    android:text="@string/boardgames_category_title"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="40sp">
                 </TextView>
             </FrameLayout>
 
@@ -63,7 +67,8 @@
                 android:id="@+id/second_category"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="5dp"
+                android:layout_marginBottom="0dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/rounded_fragment"
                 app:layout_constraintBottom_toTopOf="@id/third_category"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -71,133 +76,118 @@
                 app:layout_constraintTop_toBottomOf="@id/first_category">
 
                 <ImageView
-                    android:id="@+id/carcassone_activity"
+                    android:id="@+id/cardgames_activity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.80"
                     android:background="@drawable/rounded_fragment"
                     android:paddingTop="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/carcassonne" />
+                    android:src="@drawable/cardgames"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_shadow"/>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="230dp"
                     android:fontFamily="@font/lato"
                     android:gravity="center"
-                    android:text="@string/carcassone_category_title"
+                    android:text="@string/cardgames_category_title"
                     android:textColor="@android:color/white"
-                    android:textSize="60sp" />
+                    android:textStyle="bold"
+                    android:textSize="40sp" />
             </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/third_category"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginBottom="5dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/rounded_fragment"
-                app:layout_constraintBottom_toTopOf="@id/fourth_category"
+                app:layout_constraintBottom_toTopOf="@id/view_all_events"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/second_category">
 
                 <ImageView
-                    android:id="@+id/ligretto_activity"
+                    android:id="@+id/dicegames_activity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:alpha="0.80"
                     android:background="@drawable/rounded_fragment"
                     android:paddingBottom="1dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/outdoor_activity" />
+                    android:src="@drawable/dicegame"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/image_shadow"/>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="230dp"
                     android:fontFamily="@font/lato"
                     android:gravity="center"
-                    android:text="@string/ligretto_category_title"
+                    android:text="@string/dicegames_category_title"
                     android:textColor="@android:color/white"
-                    android:textSize="60sp">
+                    android:textStyle="bold"
+                    android:textSize="40sp">
 
                 </TextView>
             </FrameLayout>
 
-            <FrameLayout
-                android:id="@+id/fourth_category"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:background="@drawable/rounded_fragment"
-                app:layout_constraintBottom_toTopOf="@id/view_all_events"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/third_category">
-
-                <ImageView
-                    android:id="@+id/mysterium_activity"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:alpha="0.80"
-                    android:background="@drawable/rounded_fragment"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/mysterium" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/lato"
-                    android:gravity="center"
-                    android:text="@string/mysterium_category_title"
-                    android:textColor="@android:color/white"
-                    android:textSize="60sp">
-
-                </TextView>
-            </FrameLayout>
-
-            <TextView
+            <Button
                 android:id="@+id/view_all_events"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_margin="10dp"
-                android:fontFamily="@font/lato_light"
+                android:fontFamily="@font/lato_regular"
+                android:background="@drawable/button_round"
                 android:text="@string/view_all_events"
-                android:gravity="center"
+                android:textAllCaps="true"
                 android:textColor="@color/black"
-                android:textSize="20sp"
+                android:textSize="18sp"
+                android:paddingStart="55dp"
+                android:paddingEnd="30dp"
+                android:drawableEnd="@drawable/ic_double_arrow_24px"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fourth_category"/>
+                app:layout_constraintTop_toBottomOf="@id/third_category" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:id="@+id/nav_view"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:headerLayout="@layout/header"
-        app:menu="@menu/drawer_navigation_links">
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/header"
+            app:menu="@menu/drawer_navigation_links">
 
-        <LinearLayout
-            android:id="@+id/bottom_menu_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:orientation="horizontal">
-
-            <com.google.android.material.navigation.NavigationView
-                android:id="@+id/logout_nav_view"
+            <LinearLayout
+                android:id="@+id/bottom_menu_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                app:menu="@menu/drawer_account_links">
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
 
-            </com.google.android.material.navigation.NavigationView>
+                <com.google.android.material.navigation.NavigationView
+                    android:id="@+id/logout_nav_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="start"
+                    app:menu="@menu/drawer_account_links">
 
-        </LinearLayout>
-    </com.google.android.material.navigation.NavigationView>
+                </com.google.android.material.navigation.NavigationView>
+
+            </LinearLayout>
+        </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>
