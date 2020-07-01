@@ -6,7 +6,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotEmpty
 
 @Entity(name = "category")
-@Inheritance(strategy = InheritanceType.JOINED)
 class CategoryEntity(
         @Column(unique = true)
         @field:NotEmpty

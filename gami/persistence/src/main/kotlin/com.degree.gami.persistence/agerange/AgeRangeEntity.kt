@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull
 import javax.persistence.*
 
 @Entity(name = "age_range")
-@Inheritance(strategy = InheritanceType.JOINED)
 class AgeRangeEntity (
         @field:NotNull
         var ageMin: Int? = null,

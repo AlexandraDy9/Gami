@@ -6,7 +6,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotEmpty
 
 @Entity(name = "user_photo")
-@Inheritance(strategy = InheritanceType.JOINED)
 class UserPhotoEntity (
     @field:NotEmpty
     @Column(length = 1000)

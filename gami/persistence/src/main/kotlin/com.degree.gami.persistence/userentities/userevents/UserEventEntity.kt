@@ -7,7 +7,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity(name = "user_event")
-@Inheritance(strategy = InheritanceType.JOINED)
 class UserEventEntity(
         var rating: Double? = null,
 

@@ -15,7 +15,6 @@ import javax.validation.constraints.Email
 import javax.validation.constraints.NotEmpty
 
 @Entity(name = "user")
-@Inheritance(strategy = InheritanceType.JOINED)
 class UserEntity(
         @Column(unique = true)
         @field:NotEmpty

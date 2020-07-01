@@ -7,7 +7,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity(name = "time_range")
-@Inheritance(strategy = InheritanceType.JOINED)
 class TimeRangeEntity(
         @field:NotNull
         var startTime: LocalDateTime? = null,

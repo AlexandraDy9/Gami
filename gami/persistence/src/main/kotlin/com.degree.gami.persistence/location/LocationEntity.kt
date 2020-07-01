@@ -6,7 +6,6 @@ import javax.persistence.*
 import javax.validation.constraints.NotNull
 
 @Entity(name = "location")
-@Inheritance(strategy = InheritanceType.JOINED)
 class LocationEntity (
         @field:NotNull
         var longitude: Double? = null,

@@ -11,7 +11,6 @@ import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
 @Entity(name = "event")
-@Inheritance(strategy = InheritanceType.JOINED)
 class EventEntity(
         @Column(unique = true)
         @field:NotEmpty
