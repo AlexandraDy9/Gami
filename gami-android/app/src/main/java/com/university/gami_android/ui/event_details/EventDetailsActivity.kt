@@ -27,7 +27,9 @@ import com.university.gami_android.util.mergeBitmaps
 import com.university.gami_android.util.scaleBitmap
 import com.university.gami_android.ui.write_review.WriteReviewActivity
 import com.university.gami_android.R
+import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.ui.joined_users.JoinedUsersActivity
+import com.university.gami_android.ui.login.LoginActivity
 import com.university.gami_android.util.getNavigationBarSize
 import java.net.URLDecoder
 import java.time.LocalDateTime
@@ -63,6 +65,11 @@ class EventDetailsActivity : AppCompatActivity(), EventDetailsContract.View,
         presenter.bindView(this)
 
         initMap()
+
+        if(PreferenceHandler.getAuthorization() == "") {
+            finish()
+            startActivity(Intent(appContext(), LoginActivity::class.java))
+        }
 
         if(intent.getStringExtra(EVENT_NAME) != null) {
             eventName = intent.getStringExtra(EVENT_NAME)

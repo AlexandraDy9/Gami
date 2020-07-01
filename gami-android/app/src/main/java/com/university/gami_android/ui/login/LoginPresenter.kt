@@ -40,7 +40,7 @@ class LoginPresenter : BasePresenter<LoginContract.View>(), LoginContract.Presen
             override fun onError(message: String?) {
                 if (isBound()) {
                     getView()?.changeProgressaBarVisibility(true)
-                    getView()?.makeToast(message.toString(), context)
+                    getView()?.makeToast(getView()?.appContext()?.resources?.getString(R.string.login_failed)!!, context)
                 }
             }
 

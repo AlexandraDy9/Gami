@@ -10,6 +10,7 @@ import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.annotation.RequiresApi
@@ -44,8 +45,8 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
 
     private lateinit var finishButton: Button
 
-    private var lat: Double = 0.0
-    private var long: Double = 0.0
+    private var lat: Double = 45.645713283056445
+    private var long: Double = 25.591664314270023
 
     private var start: String = ""
     private var end: String = ""
@@ -194,10 +195,15 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
 
             R.id.done_btn -> {
                 if(location.text.toString().isNotBlank())  {
-                    val list = gc.getFromLocationName(location.text.toString(), 1)
-                    val address: Address = list[0]
-                    lat = address.latitude
-                    long = address.longitude
+                    try{
+                        val list = gc.getFromLocationName(location.text.toString(), 1)
+                        val address: Address = list[0]
+                        lat = address.latitude
+                        long = address.longitude
+                    }
+                    catch (e: Exception) {
+                        Log.w("error", e.message!!)
+                    }
                 }
 
                 eventData = Event(
@@ -234,6 +240,9 @@ class AddEventActivity : AppCompatActivity(), View.OnClickListener, AddEventCont
                             d.set(Calendar.DAY_OF_MONTH, dayOfMonth)
 
                             date.setText(formatter.format(d.time))
+
+                            setTime(startTime, true)
+                            setTime(endTime, false)
                         },
                         calendar.get(Calendar.YEAR),
                         calendar.get(Calendar.MONTH),

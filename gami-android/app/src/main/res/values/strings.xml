@@ -100,4 +100,5 @@
     <string name="invalid_email">Invalid email</string>
     <string name="timedisplay">Time:</string>
     <string name="arrow">-</string>
+    <string name="unauthorized">Please login first</string>
 </resources>

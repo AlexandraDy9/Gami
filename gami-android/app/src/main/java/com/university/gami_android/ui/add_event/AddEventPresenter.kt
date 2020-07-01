@@ -42,7 +42,7 @@ class AddEventPresenter : BasePresenter<AddEventContract.View>(), AddEventContra
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast(getView()?.appContext()?.getString(R.string.invalid_data_add_event)!!, context)
                 }
             }
         })
@@ -94,8 +94,6 @@ class AddEventPresenter : BasePresenter<AddEventContract.View>(), AddEventContra
     @RequiresApi(Build.VERSION_CODES.O)
     override fun fieldsValidation(event: Event, context: Context): Boolean =
         event.name.isBlank() ||
-                event.latitude == 0.0 ||
-                event.longitude == 0.0 ||
                 event.description.isBlank() ||
                 event.numberOfAttendees == 0 ||
                 event.categoryName.isBlank() ||

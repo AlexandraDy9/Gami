@@ -4,10 +4,13 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.opengl.Visibility
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.view.View
 import android.widget.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.university.gami_android.R
@@ -41,11 +44,13 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
     private lateinit var presenter: SignUpPresenter
 
     private val textWatcher = object : EditTextWatcher() {
+        @RequiresApi(Build.VERSION_CODES.O)
         override fun afterTextChanged(s: Editable?) {
             validateInputs()
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_signup)
@@ -93,6 +98,7 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
         signUp.setOnClickListener(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SimpleDateFormat", "PrivateResource")
     override fun onClick(p0: View?) {
         when (p0?.id) {
@@ -125,7 +131,7 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
             R.id.signUp_btn -> {
                 if (hasErrorForEmail() &&
                     hasErrorForPassword() &&
-                    hasErrorForConfirmPassword()) {
+                    hasErrorForConfirmPassword() && !validateInputs()) {
 
                     progressBar.visibility = View.VISIBLE
 
@@ -138,6 +144,10 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
                         " ",
                         signUpData.email,
                         signUpData.birthday), appContext())
+                }
+
+                else {
+                    resources.getString(R.string.invalid_data_signup)
                 }
             }
         }
@@ -153,7 +163,8 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
         startActivity(Intent(context, LoginActivity::class.java))
     }
 
-    fun validateInputs() {
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun validateInputs() : Boolean {
         signUpData = SignUpDao(
             firstName.text.toString(),
             lastName.text.toString(),
@@ -164,7 +175,14 @@ class SignUpActivity : AppCompatActivity(), SignUpContract.View, View.OnClickLis
             confirmPassword.text.toString()
         )
 
-        signUp.isEnabled = !presenter.fieldsValidation(signUpData)
+        val validation = presenter.fieldsValidation(signUpData)
+        if(validation) {
+            signUp.visibility = View.INVISIBLE
+        }
+        else {
+            signUp.visibility = View.VISIBLE
+        }
+        return validation
     }
 
     override fun hasErrorForPassword() : Boolean {

@@ -1,7 +1,9 @@
 package com.university.gami_android.ui.signUp
 
 import android.content.Context
+import android.os.Build
 import android.util.Patterns
+import androidx.annotation.RequiresApi
 import com.university.gami_android.R
 import com.university.gami_android.connection.HttpRequest
 import com.university.gami_android.connection.NetworkCallback
@@ -11,6 +13,8 @@ import com.university.gami_android.model.User
 import com.university.gami_android.preferences.PreferenceHandler
 import com.university.gami_android.repository.UserRepository
 import com.university.gami_android.ui.base.BasePresenter
+import java.util.*
+import java.text.SimpleDateFormat
 
 
 class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Presenter {
@@ -44,6 +48,7 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
         request.execute(call)
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun fieldsValidation(signUpData: SignUpDao): Boolean =
         signUpData.firstName.isBlank() ||
                 signUpData.lastName.isBlank() ||
@@ -51,7 +56,7 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
                 signUpData.email.isBlank() ||
                 signUpData.password.isBlank() ||
                 signUpData.confirmPassword.isBlank() ||
-                signUpData.birthday.isBlank()
+                signUpData.birthday.isBlank() || dateTimeValidation(signUpData.birthday)
 
     override fun validateEmail(email: String): Boolean =
         Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches()
@@ -61,4 +66,13 @@ class SignUpPresenter : BasePresenter<SignUpContract.View>(), SignUpContract.Pre
 
     override fun validateConfirmPassword(password: String, confirmPassword: String): Boolean =
         password.trim() == confirmPassword.trim()
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun dateTimeValidation(time: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd", Locale.US)
+        if(format.parse(time).after(Date())) {
+            return true
+        }
+        return false
+    }
 }

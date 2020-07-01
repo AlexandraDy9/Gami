@@ -53,7 +53,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
@@ -77,7 +77,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
@@ -99,7 +99,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
@@ -121,7 +121,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
@@ -143,7 +143,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
@@ -165,7 +165,7 @@ class EventDetailsPresenter : BasePresenter<EventDetailsContract.View>(),
 
             override fun onError(message: String?) {
                 if (isBound()) {
-                    getView()?.makeToast(message!!, context)
+                    getView()?.makeToast( getView()?.appContext()?.resources?.getString(R.string.unauthorized)!!, context)
                 }
             }
         })
